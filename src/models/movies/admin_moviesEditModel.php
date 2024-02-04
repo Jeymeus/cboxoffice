@@ -1,5 +1,9 @@
 <?php
 
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 $movieName = '';
 $notePress = '';
 $date = '';
@@ -221,9 +225,6 @@ function getCategoryByMovie($movieId)
  * @param string $path to save file
  * @param string $field name of input type file
  */
-
-// dump($_FILES);
-// die;
 function uploadFile(string $path, string $field, array $exts = ['jpg', 'png', 'jpeg'], int $maxSize = 2097152)
 {
     $messageUploadFile = '';
@@ -305,6 +306,16 @@ function removeAccent($string)
     );
     return $string;
 }   
+
+function resizePoster($manager, $targetToSave) 
+{
+    
+    $manager = new ImageManager(new Driver());
+    $image = $manager->read($targetToSave);
+    $image->scale(height: 500);
+    $image->save($targetToSave);
+}
+
 
 // function capitalizeFirstLetter($str) {
 //     // Met la première lettre en majuscule et le reste en minuscules

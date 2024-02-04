@@ -138,6 +138,7 @@ if (!empty($_POST)) {
                     alert('Erreur lors de la modification');
                 }
                 alert('Le film a été modifié avec succès', 'success');
+                resizePoster($manager, $targetToSave);
                 updateMovie($movieId, $targetToSave);
             }
             // If ID and film do not exist, insertion
@@ -149,6 +150,7 @@ if (!empty($_POST)) {
                     alert('Erreur lors de la création');
                 }
                 alert('Le film a été ajouté avec succès', 'success');
+                resizePoster($manager, $targetToSave);
                 insertMovie($movieSlug, $targetToSave);
             }
         }
