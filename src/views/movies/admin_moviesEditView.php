@@ -126,7 +126,7 @@
             <div class="poster mb-4">
                 <label for="floatingPoster">Affiche</label>
                 <input type="file" class="form-control mb-2 <?= $errorsMessage['class'] ?>" id="floatingPosterInput" name="poster" onchange="previewPoster(this)">
-                <img class="<?= $imgPoster ?>" id="posterPreview" src="<?= htmlentities($poster); ?>" alt="Affiche du film" style="max-width: 100%; height: auto;">
+                <img class="<?= $imgPoster ?>" id="posterPreview" src="<?= '/' . htmlentities($poster); ?>" alt="Affiche du film" style="max-width: 100%; height: auto;">
                 <?= $errorsMessage['poster']; ?>
             </div>
             <div class="trailer mb-4">

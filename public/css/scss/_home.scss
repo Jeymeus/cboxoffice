@@ -1,23 +1,21 @@
 #movies {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 30px;
 
-    article {
-        width: 30%;
-        margin-bottom: 30px;
-    }
+  article {
+    width: 30%;
+    margin-bottom: 30px;
+  }
 
-    img {
-        border-radius: 20px;
-    }
+  img {
+    border-radius: 20px;
+    width: 100%;
+  }
 
-
-
-    h2 {
-        background-color: aqua;
-        padding: 5px 0;
-    }
-
+  h2 {
+    background-color: aqua;
+    padding: 5px 0;
+  }
 }

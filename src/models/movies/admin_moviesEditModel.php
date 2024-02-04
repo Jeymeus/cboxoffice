@@ -312,7 +312,8 @@ function resizePoster($manager, $targetToSave)
     
     $manager = new ImageManager(new Driver());
     $image = $manager->read($targetToSave);
-    $image->scale(height: 500);
+    $image->resize(height: 500);
+    $image->resize(width: 350);
     $image->save($targetToSave);
 }
 

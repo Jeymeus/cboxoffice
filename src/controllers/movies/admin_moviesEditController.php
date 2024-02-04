@@ -91,68 +91,72 @@ if (!empty($_POST)) {
         $errorsMessage['class'] = 'is-invalid';
     }
 
-
     if (count(array_filter($errorsMessage)) >= 0) {
 
-        $uploadPath = 'uploads';
+        
+        if (!empty($_FILES['poster']['name'])) { 
 
-        $uploadResult = uploadFile($uploadPath, 'poster');
+            $uploadPath = 'uploads';
 
+            $uploadResult = uploadFile($uploadPath, 'poster');
 
-        if (!empty($uploadResult['messagePoster'])) {
-            $errorsMessage['poster'] = '<span class="invalid-feedback">' . $uploadResult['messagePoster'] . '</span>';
-            $errorsMessage['class'] = 'is-invalid';
-        } else if (!empty($uploadResult['path'])) {
-
-            $targetToSave = $uploadResult['path'];
-
-
-            $alreadyExistFiles = checkAlreadyExistFile($targetToSave);
-            // If the film exists and ID not,
-            if (in_array($targetToSave, $alreadyExistFiles) && !isset($_GET['id'])) {
-                $errorsMessage['poster'] = 'Le nom de l\'affiche existe déjà';
+            if (!empty($uploadResult['messagePoster'])) {
+                $errorsMessage['poster'] = '<span class="invalid-feedback">' . $uploadResult['messagePoster'] . '</span>';
                 $errorsMessage['class'] = 'is-invalid';
-            }
-            // If the film and ID exist, upload without poster
-            elseif (in_array($targetToSave, $alreadyExistFiles) && isset($_GET['id'])) {
-                // Check if the film's ID matches his poster
-                $movie = getMovieById($_GET['id']);
-                if ($movie && $movie['poster'] === $targetToSave) {
-                    if (count(array_filter($errorsMessage)) > 0) {
+            } else if (!empty($uploadResult['path'])) {
+
+                $targetToSave = $uploadResult['path'];
+                $alreadyExistFiles = checkAlreadyExistFile($targetToSave);
+                // If the film exists and ID not,
+                if (in_array($targetToSave, $alreadyExistFiles) && !isset($_GET['id'])) {
+                    $errorsMessage['poster'] = 'Le nom de l\'affiche existe déjà';
+                    $errorsMessage['class'] = 'is-invalid';
+                }
+                // If the film and ID exist, upload without poster
+                elseif (in_array($targetToSave, $alreadyExistFiles) && isset($_GET['id'])) {
+                    // Check if the film's ID matches his poster
+                    $movie = getMovieById($_GET['id']);
+                    if ($movie && $movie['poster'] === $targetToSave) {
+                        if (count(array_filter($errorsMessage)) > 0) {
+                            alert('Erreur lors de la modification');
+                        }
+                        alert('Le film a été modifié avec succès', 'success');
+                        die('toto');
+                        uploadMovieLessPoster($movieId);
+                    } else {
+                        // If the ID doesn't match the poster, 
+                        $errorsMessage['poster'] = 'Une affiche du même nom existe.';
+                        $errorsMessage['class'] = 'is-invalid';
+                    }
+                }
+                // If ID exists and the film does not exist, complete upload
+                elseif (isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
+                    if (!move_uploaded_file($_FILES['poster']['tmp_name'], $targetToSave)) {
+                        $errorsMessage['poster'] = 'L\'affiche n\'a pas été téléchargé.';
+                        $errorsMessage['class'] = 'is-invalid';
+                    } elseif (count(array_filter($errorsMessage)) > 0) {
                         alert('Erreur lors de la modification');
                     }
                     alert('Le film a été modifié avec succès', 'success');
-                    uploadMovieLessPoster($movieId);
-                } else {
-                    // If the ID doesn't match the poster, 
-                    $errorsMessage['poster'] = 'Une affiche du même nom existe.';
-                    $errorsMessage['class'] = 'is-invalid';
+                    resizePoster($manager, $targetToSave);
+                    updateMovie($movieId, $targetToSave);
+                }
+                // If ID and film do not exist, insertion
+                elseif (!isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
+                    if (!move_uploaded_file($_FILES['poster']['tmp_name'], $targetToSave)) {
+                        $errorsMessage['poster'] = 'L\'affiche n\'a pas été téléchargé.';
+                        $errorsMessage['class'] = 'is-invalid';
+                    } elseif (count(array_filter($errorsMessage)) > 0) {
+                        alert('Erreur lors de la création');
+                    }
+                    alert('Le film a été ajouté avec succès', 'success');
+                    resizePoster($manager, $targetToSave);
+                    insertMovie($movieSlug, $targetToSave);
                 }
             }
-            // If ID exists and the film does not exist, complete upload
-            elseif (isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
-                if (!move_uploaded_file($_FILES['poster']['tmp_name'], $targetToSave)) {
-                    $errorsMessage['poster'] = 'L\'affiche n\'a pas été téléchargé.';
-                    $errorsMessage['class'] = 'is-invalid';
-                } elseif (count(array_filter($errorsMessage)) > 0) {
-                    alert('Erreur lors de la modification');
-                }
-                alert('Le film a été modifié avec succès', 'success');
-                resizePoster($manager, $targetToSave);
-                updateMovie($movieId, $targetToSave);
-            }
-            // If ID and film do not exist, insertion
-            elseif (!isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
-                if (!move_uploaded_file($_FILES['poster']['tmp_name'], $targetToSave)) {
-                    $errorsMessage['poster'] = 'L\'affiche n\'a pas été téléchargé.';
-                    $errorsMessage['class'] = 'is-invalid';
-                } elseif (count(array_filter($errorsMessage)) > 0) {
-                    alert('Erreur lors de la création');
-                }
-                alert('Le film a été ajouté avec succès', 'success');
-                resizePoster($manager, $targetToSave);
-                insertMovie($movieSlug, $targetToSave);
-            }
-        }
+        } 
+        alert('Le film a été modifié avec succès', 'success');
+        uploadMovieLessPoster($movieId);
     }
+    alert('Erreur lors de la modification');
 }
