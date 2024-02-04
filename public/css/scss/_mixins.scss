@@ -1,0 +1,35 @@
+@use "sass:math";
+
+/** Font size convert **/
+@function calculateRem($size) {
+    $remSize: math.div($size, 16px);
+    @return #{$remSize}rem;
+}
+
+// fonction prédéfini à réutiliser seul le 16px peut varier il est en fonction de la taille définit dans la maquette (body)
+
+@mixin fontSize($size) {
+    font-size: $size;
+    font-size: calculateRem($size);
+}
+
+// Pour appeller @include fontSize(18px par exemple)
+
+
+
+@mixin button($color) { 
+    //  on peut définitr une couleur par défaut $color: black dans les ()
+    background-color: antiquewhite;
+    padding: 20px;
+    margin-bottom: 20px;
+    color : $color;
+    //  design du boutton  
+    //  C'est une fonction 
+    //  reste plus qu'à l'appeler @include là ou on veut 
+
+    &:hover, 
+    &:focus {
+        transform: scale(0.5);
+        // design 
+    }
+}

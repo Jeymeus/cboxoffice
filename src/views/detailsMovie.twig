@@ -1,0 +1,47 @@
+{% extends 'layouts/public.twig' %}
+{% block title %}Détails du film {{ movie.title }}{% endblock %}
+
+{% block content %}
+<section class="wrapper" id="details-movie">
+    <div class="displayStartVert">
+        <h1>{{ movie.title }}</h1>
+        <svg class="heart" xmlns="http://www.w3.org/2000/svg" width="68" height="62.513" data-name="coeur">
+            <g fill="rgba(255,255,255,0)" data-name="coeur">
+                <path
+                    d="M34 60.693c-8.207-5.672-14.993-11.384-20.181-16.987C9.04 38.546 5.597 33.464 3.584 28.6c-1.583-3.829-2.27-7.495-2.04-10.896.204-3.037 1.13-5.806 2.751-8.232C7.582 4.554 13.518 1.5 19.785 1.5c2.523 0 4.916.493 7.111 1.465a15.899 15.899 0 0 1 5.941 4.542L34 8.934l1.163-1.427a15.899 15.899 0 0 1 5.941-4.542C43.3 1.993 45.692 1.5 48.214 1.5c6.269 0 12.205 3.054 15.492 7.97 1.621 2.426 2.547 5.195 2.751 8.232.23 3.402-.458 7.068-2.041 10.897-2.013 4.865-5.457 9.948-10.235 15.107C48.993 49.31 42.207 55.021 34 60.693Z" />
+                <path fill="#f00"
+                    d="M34 58.866c7.734-5.414 14.147-10.85 19.08-16.179 4.658-5.029 8.005-9.961 9.95-14.661 1.494-3.614 2.144-7.054 1.93-10.223-.186-2.771-1.028-5.294-2.501-7.499-1.495-2.235-3.63-4.096-6.176-5.38A18.003 18.003 0 0 0 48.214 3c-4.801 0-9.023 1.937-11.888 5.454L34 11.309l-2.326-2.855C28.81 4.937 24.587 3 19.786 3a18 18 0 0 0-8.068 1.924C9.172 6.208 7.037 8.07 5.542 10.305c-1.474 2.204-2.316 4.727-2.502 7.499-.214 3.169.436 6.608 1.93 10.221 1.945 4.7 5.292 9.633 9.95 14.662C19.852 48.015 26.265 53.452 34 58.866m0 3.647C15.718 50.03 6.13 38.676 2.198 29.173-8.336 3.703 21.753-8.476 34 6.558 37.663 2.063 42.924 0 48.214 0c12.4 0 24.971 11.321 17.588 29.172C61.87 38.676 52.282 50.031 34 62.512Z" />
+            </g>
+        </svg>
+        <div id="press">
+            <svg class="star" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
+                style="enable-background:new 0 0 47.1 46.9" viewBox="0 0 47.1 46.9">
+                <path
+                    d="M18.9 3.2c1-2.6 3.9-3.9 6.5-2.9 1.3.5 2.4 1.6 2.9 2.9l2.6 6.8c.7 1.8 2.4 3 4.3 3.2l7.4.6c2.8.2 4.8 2.6 4.6 5.4-.1 1.3-.7 2.5-1.6 3.3L39.3 28c-1.3 1.2-1.9 3.1-1.5 4.8l1.8 8c.6 2.7-1.1 5.4-3.8 6-1.3.3-2.7.1-3.9-.7l-5.7-3.8c-1.7-1.1-3.8-1.1-5.5 0L15 46.1c-2.3 1.5-5.4.9-6.9-1.4-.8-1.1-1-2.5-.7-3.9l1.8-8C9.6 31 9 29.2 7.7 28l-6.1-5.6c-2-1.9-2.2-5-.4-7.1.9-.9 2-1.5 3.3-1.6l7.4-.6c1.9-.2 3.6-1.4 4.3-3.2l2.7-6.7z"
+                    style="fill:#e5fe06" />
+            </svg>
+            <div class="press">
+                <p class="note-press">Presse</p>
+                <p>{{ movie.note_press }}</p>
+            </div>
+        </div>
+    </div>
+    <ul class="displayStart">
+        <li>{{ movie.date|date('Y') }}. {{ duration }}</li>
+    </ul>
+    <div class="displayStart">
+        <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+        <iframe src="{{ movie.trailer}}" title="{{ movie.title }}" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+    </div>
+    <div class="displayStart">
+        {% for category in categories %}
+        <div class="category">
+            <p>{{ category }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <p>{{ movie.synopsis }}</p>
+</section>
+{% endblock %}
