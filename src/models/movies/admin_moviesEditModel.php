@@ -56,29 +56,37 @@ function getMovies()
     return $query->fetchAll();
 }
 
-function checkAlreadyExistTitle(): mixed
+function checkAlreadyExistTitle($movieId)
 {
     global $db;
-
-    if (!empty($_GET['id'])) {
-        $movies = getMovies();
-
-        // Itérer sur les films pour vérifier si le titre existe déjà
-        foreach ($movies as $movie) {
-            if ($movie->title === $_POST['movie_name']) {
-                return false;
-            }
-        }
-    }
 
     // Requête SQL pour vérifier si le titre existe déjà dans la base de données
     $sql = 'SELECT title FROM movies WHERE title = :title';
     $query = $db->prepare($sql);
     $query->bindParam(':title', $_POST['movie_name']);
     $query->execute();
+    $existingTitle = $query->fetch();
 
-    return $query->fetch();
+    // Si le titre existe déjà et ne correspond pas à celui de l'ID donné
+    if (!empty($existingTitle)) {
+        if ($movieId) {
+            $sql = 'SELECT title FROM movies WHERE id = :id';
+            $query = $db->prepare($sql);
+            $query->bindParam(':id', $movieId);
+            $query->execute();
+            $titleById = $query->fetch();
+            if ($titleById && $titleById->title === $_POST['movie_name']) {
+                return false; // Le titre correspond à celui de l'ID donné
+            } else {
+                return true; // Le titre existe mais ne correspond pas à celui de l'ID donné
+            }
+        }
+        return true; // Le titre existe mais aucun ID n'est donné
+    }
+    return false; // Le titre n'existe pas
 }
+
+
 
 
 
@@ -228,10 +236,6 @@ function getCategoryByMovie($movieId)
 function uploadFile(string $path, string $field, array $exts = ['jpg', 'png', 'jpeg'], int $maxSize = 2097152)
 {
     $messageUploadFile = '';
-    // Check submit form with post method
-    if (empty($_FILES)) :
-        $messageUploadFile = 'Merci d\'insérer un fichier';
-    endif;
 
     // Check exit directory if not create
     if (!is_dir($path)) {

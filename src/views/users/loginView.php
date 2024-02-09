@@ -41,8 +41,8 @@
                 <?= $error['message']; ?>
             </div>
             <div class="form-floating ">
-                <input type="text" class="form-control <?= $error['class']; ?>" id="bot_field" name="bot_field" placeholder="Saisir pour tester le honeypot">
-                <label for="bot_field">Saisir pour tester le honeypot</label>
+                <input type="text" class="form-control d-none" id="bot_field" name="bot_field" placeholder="Entreprise">
+                <label for="bot_field"></label>
             </div>
             <div class="form-floating">
                 <?php $error = checkEmptyFields('pwd'); ?>
@@ -54,6 +54,10 @@
             <p class="mt-4 mb-3 text-body-secondary text-center">
                 <a href="<?= $router->generate('lostPassword'); ?>">Mot de passe oublié ?</a>
             </p>
+            <p class="mt-4 mb-3 text-body-secondary text-center">
+                <a href="<?= $router->generate('home'); ?>">Retour à l'accueil</a>
+            </p>
+                
         </form>
     </div>
 </div>

@@ -10,11 +10,13 @@ if (!isset($_SESSION['attempts'])) {
    $_SESSION['attempts'] = 0;
 }
 
+if (!empty($_POST['bot_field'])) {
+   alert('Bot Spoted', 'success');
+   // header('Location: ' . $router->generate('home'));
+}
+
 if ($_SESSION['attempts'] <= 3) {
    if (!empty($_POST['email']) && !empty($_POST['pwd'])) {
-      if (!empty($_POST['bot_field'])) {
-         alert('Bot Spoted', 'success');
-      }
 
       $accessUser = checkUserAccess();
 

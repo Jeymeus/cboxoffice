@@ -14,6 +14,7 @@
 </head>
 
 <body>
+    <div><h1>Coucou</h1></div>
     <header>
         <div class="containerbody">
             <div><img src="public/images/boxoffice.png" alt=""></div>
@@ -33,3 +34,4 @@
             <div><img src="public/images/cinefan.png" alt=""></div>
         </div>
     </header>
+    
