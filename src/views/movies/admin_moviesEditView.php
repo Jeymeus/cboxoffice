@@ -97,41 +97,41 @@
         <h1 class="h3 mb-3 fw-normal text-center"><?= $formTitle; ?></h1>
         <div class="display">
             <div class="form-floating movie_name">
-                <input type="text" class="form-control <?= $errorsMessage['class'] ?>" id="floatingMovieName" name="movie_name" placeholder="Nom du Film" value="<?= htmlentities($movieName); ?>">
+                <input type="text" class="form-control <?= $errorsClass['movie_name'] ?>" id="floatingMovieName" name="movie_name" placeholder="Nom du Film" value="<?= htmlentities($movieName); ?>">
                 <label for="floatingMovieName">Nom du Film</label>
                 <?= $errorsMessage['movie_name']; ?>
             </div>
             <div class="form-floating note_press">
-                <input type="number" class="form-control <?= $errorsMessage['class'] ?>" id="floatingNotePress" name="note_press" placeholder="Note de presse" min="0" max="10" step="0.1" value="<?= htmlentities($notePress); ?>">
+                <input type="number" class="form-control <?= $errorsClass['note_press'] ?>" id="floatingNotePress" name="note_press" placeholder="Note de presse" min="0" max="10" step="0.1" value="<?= htmlentities($notePress); ?>">
                 <label for="floatingNotePress" class="form-label">Note de presse</label>
                 <?= $errorsMessage['note_press']; ?>
             </div>
             <div class="form-floating date">
-                <input type="date" class="form-control <?= $errorsMessage['class'] ?>" id="floatingDate" name="date" placeholder="Date de sortie" value="<?= htmlentities($date); ?>">
+                <input type="date" class="form-control <?= $errorsClass['date'] ?>" id="floatingDate" name="date" placeholder="Date de sortie" value="<?= htmlentities($date); ?>">
                 <label for="floatingDate">Date de sortie</label>
                 <?= $errorsMessage['date']; ?>
             </div>
             <div class="form-floating duration">
-                <input type="texte" class="form-control <?= $errorsMessage['class'] ?>" id="floatingDuration" name="duration" value="<?= htmlentities($duration) ?>">
+                <input type="texte" class="form-control <?= $errorsClass['duration'] ?>" id="floatingDuration" name="duration" value="<?= htmlentities($duration) ?>">
                 <label for="floatingDuration">Durée</label>
                 <?= $errorsMessage['duration']; ?>
             </div>
         </div>
         <div class="form-floating">
-            <textarea class="form-control <?= $errorsMessage['class'] ?>" id="floatingSynopsis" name="synopsis" placeholder="Synopsis" style="height: 200px"><?= htmlentities($synopsis); ?></textarea>
+            <textarea class="form-control <?= $errorsClass['synopsis'] ?>" id="floatingSynopsis" name="synopsis" placeholder="Synopsis" style="height: 200px"><?= htmlentities($synopsis); ?></textarea>
             <label for="floatingSynopsis">Synopsis</label>
             <?= $errorsMessage['synopsis']; ?>
         </div>
         <div class="display">
             <div class="poster mb-4">
                 <label for="floatingPoster">Affiche</label>
-                <input type="file" class="form-control mb-2 <?= $errorsMessage['class'] ?>" id="floatingPosterInput" name="poster" onchange="previewPoster(this)">
+                <input type="file" class="form-control mb-2 <?= $errorsClass['poster'] ?>" id="floatingPosterInput" name="poster" onchange="previewPoster(this)">
                 <img class="<?= $imgPoster ?>" id="posterPreview" src="<?= '/' . htmlentities($poster); ?>" alt="Affiche du film" style="max-width: 100%; height: auto;">
                 <?= $errorsMessage['poster']; ?>
             </div>
             <div class="trailer mb-4">
                 <label for="floatingTrailer">Bande Anonnce</label>
-                <input type="text" class="form-control mb-2 <?= $errorsMessage['class'] ?>" id="floatingTrailer" name="trailer" value="<?= htmlentities($trailer) ?>" onchange="previewTrailer(this)">
+                <input type="text" class="form-control mb-2 <?= $errorsClass['trailer'] ?>" id="floatingTrailer" name="trailer" value="<?= htmlentities($trailer) ?>" onchange="previewTrailer(this)">
                 <iframe id="iframe" src="<?= htmlentities($trailer) ?>" title="<?= htmlentities($movieName) ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 <?= $errorsMessage['trailer']; ?>
             </div>
