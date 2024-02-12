@@ -147,7 +147,7 @@
             }
         ?>
             <div class="form-check form-check-inline">
-                <input class="form-check-input mb-4" type="checkbox" id="<?= htmlentities($cat->name); ?>" value="<?= htmlentities($cat->name); ?>" <?= $checked ? 'checked' : '' ?>>
+                <input class="form-check-input mb-4" type="checkbox" name="categories[]" id="<?= htmlentities($cat->name); ?>" value="<?= htmlentities($cat->id); ?>" <?= $checked ? 'checked' : '' ?>>
                 <label class="form-check-label" for="<?= htmlentities($cat->name); ?>"><?= htmlentities($cat->name); ?></label>
             </div>
         <?php } ?>

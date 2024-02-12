@@ -195,42 +195,6 @@ function uploadMovieLessPoster($movieId)
     }
 }
 
-
-function getCategory()
-{
-    global $db;
-    $sql = 'SELECT * FROM category ORDER bY name';
-    $query = $db->prepare($sql);
-    $query->execute();
-    $allCategory = $query->fetchAll();
-
-    return $allCategory;
-}
-
-$allCategory = getCategory();
-
-function getCategoryByMovie($movieId)
-{
-
-    global $db;
-
-    $sql = 'SELECT c.*
-            FROM category c
-            JOIN movie_category mc ON c.id = mc.category_id
-            WHERE mc.movie_id = :movie_id';
-
-    $query = $db->prepare($sql);
-    $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
-    $query->execute();
-
-    $categoryByMovies = $query->fetchAll();
-
-    return $categoryByMovies;
-}
-
-$categoryByMovies = getCategoryByMovie($movieId);
-
-
 /**	
  * Upload file
  * 
@@ -278,9 +242,6 @@ function uploadFile(string $path, string $field, array $exts = ['jpg', 'png', 'j
     return ['messagePoster' => $messageUploadFile, 'path' => $targetToSave];
 }
 
-
-
-
 function formatBytes($size, $precision = 2)
 {
     $base     = log($size, 1024);
@@ -288,7 +249,6 @@ function formatBytes($size, $precision = 2)
 
     return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
 }
-
 
 function renameFile(string $name)
 {
@@ -303,7 +263,6 @@ function renameFile(string $name)
 
     return $name;
 }
-
 
 function removeAccent($string)
 {
@@ -325,15 +284,96 @@ function resizePoster($manager, $targetToSave)
     $image->save($targetToSave);
 }
 
+function getCategory()
+{
+    global $db;
+    $sql = 'SELECT * FROM category ORDER bY name';
+    $query = $db->prepare($sql);
+    $query->execute();
+    $allCategory = $query->fetchAll();
 
-// function capitalizeFirstLetter($str) {
-//     // Met la première lettre en majuscule et le reste en minuscules
-//     return ucfirst(strtolower($str));
-// }
+    return $allCategory;
+}
 
-// // Exemple d'utilisation
-// $string = 'BoNjoUr';
-// $capitalizedString = capitalizeFirstLetter($string);
+$allCategory = getCategory();
 
-// // Affichage du résultat
-// echo $capitalizedString;  // Affichera "Bonjour"
+function getCategoryByMovie($movieId)
+{
+
+    global $db;
+
+    $sql = 'SELECT c.*
+            FROM category c
+            JOIN movie_category mc ON c.id = mc.category_id
+            WHERE mc.movie_id = :movie_id';
+
+    $query = $db->prepare($sql);
+    $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
+    $query->execute();
+
+    $categoryByMovies = $query->fetchAll();
+
+    return $categoryByMovies;
+}
+
+$categoryByMovies = getCategoryByMovie($movieId);
+
+
+// Définition de la fonction pour mettre à jour les catégories associées à un film
+function updateCategory()
+{
+    global $db;
+    global $movieId;
+
+    // Récupérez les catégories déjà associées au film depuis la base de données
+    $existingCategories = getCategoryByMovie($movieId);
+
+    // Initialisez un tableau pour stocker les ID des catégories déjà associées
+    $existingCategoryIds = [];
+
+    // Stockez les ID des catégories déjà associées au film dans un tableau
+    foreach ($existingCategories as $existingCategory) {
+        $existingCategoryIds[] = $existingCategory->id;
+    }
+
+    // Récupérez toutes les catégories disponibles
+    $allCategories = getCategory();
+
+    // Initialisez un tableau pour stocker les catégories sélectionnées dans le formulaire
+    $selectedCategories = [];
+
+    // Parcourez toutes les catégories disponibles et vérifiez si elles ont été cochées dans le formulaire
+    foreach ($allCategories as $category) {
+        $categoryId = $category->id;
+        if (in_array($categoryId, $_POST['categories'])) {
+            $selectedCategories[] = $categoryId;
+        }
+    }
+
+    // Comparez les catégories déjà associées avec les nouvelles catégories sélectionnées
+    $categoriesToDelete = array_diff($existingCategoryIds, $selectedCategories);
+    $categoriesToAdd = array_diff($selectedCategories, $existingCategoryIds);
+
+    // Supprimez les catégories désélectionnées de la table movie_category
+    foreach ($categoriesToDelete as $categoryId) {
+        $sql = 'DELETE FROM movie_category WHERE movie_id = :movie_id AND category_id = :category_id';
+        $query = $db->prepare($sql);
+        $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
+        $query->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+        $query->execute();
+    }
+
+    // Ajoutez les nouvelles catégories sélectionnées à la table movie_category
+    foreach ($categoriesToAdd as $categoryId) {
+        $sql = 'INSERT INTO movie_category (movie_id, category_id) VALUES (:movie_id, :category_id)';
+        $query = $db->prepare($sql);
+        $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
+        $query->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+        $query->execute();
+    }
+}
+
+// Appeler la fonction updateCategory() si le formulaire a été soumis
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($movieId)) {
+    updateCategory();
+}
