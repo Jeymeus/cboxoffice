@@ -56,9 +56,10 @@ function getMovies()
     return $query->fetchAll();
 }
 
-function checkAlreadyExistTitle($movieId)
+function checkAlreadyExistTitle()
 {
     global $db;
+    global $movieId;
 
     // Requête SQL pour vérifier si le titre existe déjà dans la base de données
     $sql = 'SELECT title FROM movies WHERE title = :title';
@@ -201,11 +202,12 @@ function getCategory()
     $sql = 'SELECT * FROM category ORDER bY name';
     $query = $db->prepare($sql);
     $query->execute();
+    $allCategory = $query->fetchAll();
 
-    return $query->fetchAll();
+    return $allCategory;
 }
 
-$category = getCategory();
+$allCategory = getCategory();
 
 function getCategoryByMovie($movieId)
 {
@@ -221,10 +223,12 @@ function getCategoryByMovie($movieId)
     $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
     $query->execute();
 
-    $categories = $query->fetchAll();
+    $categoryByMovies = $query->fetchAll();
 
-    return $categories;
+    return $categoryByMovies;
 }
+
+$categoryByMovies = getCategoryByMovie($movieId);
 
 
 /**	
@@ -309,11 +313,11 @@ function removeAccent($string)
         $string
     );
     return $string;
-}   
+}
 
-function resizePoster($manager, $targetToSave) 
+function resizePoster($manager, $targetToSave)
 {
-    
+
     $manager = new ImageManager(new Driver());
     $image = $manager->read($targetToSave);
     $image->resize(height: 500);

@@ -137,12 +137,21 @@
             </div>
         </div>
         <h4 class="mb-4">Catégories</h4>
-        <?php foreach ($category as $cat) { ?>
+        <?php foreach ($allCategory as $cat) {
+            $checked = false;
+            foreach ($categoryByMovies as $catMovie) {
+                if ($cat->name == $catMovie->name) {
+                    $checked = true;
+                    break;
+                }
+            }
+        ?>
             <div class="form-check form-check-inline">
-                <input class="form-check-input mb-4" type="checkbox" id="<?= htmlentities($cat->name); ?>" value="<?= htmlentities($cat->name); ?>">
+                <input class="form-check-input mb-4" type="checkbox" id="<?= htmlentities($cat->name); ?>" value="<?= htmlentities($cat->name); ?>" <?= $checked ? 'checked' : '' ?>>
                 <label class="form-check-label" for="<?= htmlentities($cat->name); ?>"><?= htmlentities($cat->name); ?></label>
             </div>
         <?php } ?>
+
         <button class="btn btn-primary w-100 py-2" type="submit"><?= $submitButtonLabel; ?></button>
     </form>
 </div>
