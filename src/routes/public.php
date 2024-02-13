@@ -5,7 +5,7 @@ $router->addMatchTypes(['url' => '[a-z0-9]+(?:-[a-z0-9]+)*']);
 
 //Movies
 $router->map('GET', '/','home', 'home');
-$router->map('GET', '/recherche','search', 'search');
+$router->map('GET', '/recherche','searchMovie', 'search');
 $router->map('GET', '/films/[url:slug]','detailsMovie', 'details');
 
 

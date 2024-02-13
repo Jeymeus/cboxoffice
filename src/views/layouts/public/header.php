@@ -20,7 +20,7 @@
             <div><img src="public/images/boxoffice.png" alt=""></div>
             <div class="wrapper">
                 <div class="container">
-                    <form class="search">
+                    <form class="search" method="get">
                         <input type="text" id="search" placeholder="Rechercher un film, une série, un acteur... ">
                         <button id="wen"><img src="public/images/loupe.png" alt=""></button>
                     </form>
