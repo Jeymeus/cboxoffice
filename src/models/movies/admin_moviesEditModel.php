@@ -1,6 +1,8 @@
 <?php
 
 
+
+
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -34,7 +36,7 @@ if (isset($_GET['id'])) {
         $formTitle = 'Modifier un Film';
         $submitButtonLabel = 'Modifier';
     }
-} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+} else  {
 
     $movieName = getValue('movie_name');
     $notePress = getValue('note_press');
@@ -297,10 +299,11 @@ function getCategory()
 
 $allCategory = getCategory();
 
-function getCategoryByMovie($movieId)
+function getCategoryByMovie()
 {
 
     global $db;
+    global $movieId;
 
     $sql = 'SELECT c.*
             FROM category c
@@ -316,7 +319,7 @@ function getCategoryByMovie($movieId)
     return $categoryByMovies;
 }
 
-$categoryByMovies = getCategoryByMovie($movieId);
+$categoryByMovies = getCategoryByMovie();
 
 
 // Définition de la fonction pour mettre à jour les catégories associées à un film

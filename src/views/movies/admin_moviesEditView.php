@@ -112,7 +112,7 @@
                 <?= $errorsMessage['date']; ?>
             </div>
             <div class="form-floating duration">
-                <input type="texte" class="form-control <?= $errorsClass['duration'] ?>" id="floatingDuration" name="duration" value="<?= htmlentities($duration) ?>">
+                <input type="text" class="form-control <?= $errorsClass['duration'] ?>" id="floatingDuration" name="duration" value="<?= htmlentities($duration) ?>">
                 <label for="floatingDuration">Durée</label>
                 <?= $errorsMessage['duration']; ?>
             </div>
@@ -121,20 +121,6 @@
             <textarea class="form-control <?= $errorsClass['synopsis'] ?>" id="floatingSynopsis" name="synopsis" placeholder="Synopsis" style="height: 200px"><?= htmlentities($synopsis); ?></textarea>
             <label for="floatingSynopsis">Synopsis</label>
             <?= $errorsMessage['synopsis']; ?>
-        </div>
-        <div class="display">
-            <div class="poster mb-4">
-                <label for="floatingPoster">Affiche</label>
-                <input type="file" class="form-control mb-2 <?= $errorsClass['poster'] ?>" id="floatingPosterInput" name="poster" onchange="previewPoster(this)">
-                <img class="<?= $imgPoster ?>" id="posterPreview" src="<?= '/' . htmlentities($poster); ?>" alt="Affiche du film" style="max-width: 100%; height: auto;">
-                <?= $errorsMessage['poster']; ?>
-            </div>
-            <div class="trailer mb-4">
-                <label for="floatingTrailer">Bande Anonnce</label>
-                <input type="text" class="form-control mb-2 <?= $errorsClass['trailer'] ?>" id="floatingTrailer" name="trailer" value="<?= htmlentities($trailer) ?>" onchange="previewTrailer(this)">
-                <iframe id="iframe" src="<?= htmlentities($trailer) ?>" title="<?= htmlentities($movieName) ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                <?= $errorsMessage['trailer']; ?>
-            </div>
         </div>
         <h4 class="mb-4">Catégories</h4>
         <?php foreach ($allCategory as $cat) {
@@ -151,7 +137,23 @@
                 <label class="form-check-label" for="<?= htmlentities($cat->name); ?>"><?= htmlentities($cat->name); ?></label>
             </div>
         <?php } ?>
-
+        <div class="form-floating mb-4">
+           <button type="submit" name="new-category" class="btn btn-danger">Ajouter Catégorie</button>
+        </div>
+        <div class="display">
+            <div class="poster mb-4">
+                <label for="floatingPoster">Affiche</label>
+                <input type="file" class="form-control mb-2 <?= $errorsClass['poster'] ?>" id="floatingPosterInput" name="poster" onchange="previewPoster(this)">
+                <img class="<?= $imgPoster ?>" id="posterPreview" src="<?= '/' . htmlentities($poster); ?>" alt="Affiche du film" style="max-width: 100%; height: auto;">
+                <?= $errorsMessage['poster']; ?>
+            </div>
+            <div class="trailer mb-4">
+                <label for="floatingTrailer">Bande Anonnce</label>
+                <input type="text" class="form-control mb-2 <?= $errorsClass['trailer'] ?>" id="floatingTrailer" name="trailer" value="<?= htmlentities($trailer) ?>" onchange="previewTrailer(this)">
+                <iframe id="iframe" src="<?= htmlentities($trailer) ?>" title="<?= htmlentities($movieName) ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <?= $errorsMessage['trailer']; ?>
+            </div>
+        </div>
         <button class="btn btn-primary w-100 py-2" type="submit"><?= $submitButtonLabel; ?></button>
     </form>
 </div>

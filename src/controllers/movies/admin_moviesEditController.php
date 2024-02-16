@@ -1,5 +1,20 @@
 <?php
 
+
+
+$_SESSION['movieName'] = $movieName;
+$_SESSION['notePress'] = $notePress;
+$_SESSION['date'] = $date;
+$_SESSION['duration'] = $duration;
+$_SESSION['synopsis'] = $synopsis;
+$_SESSION['trailer'] = $trailer;
+
+// Assurez-vous que le formulaire a été soumis et que le bouton "Ajouter Catégorie" a été cliqué
+if (isset($_POST['new-category'])) {
+    header('Location: ' . $router->generate('categoryEdit'));
+    exit();
+}
+
 $errorsMessage = [
     'movie_name' => false,
     'date' => false,
@@ -11,19 +26,20 @@ $errorsMessage = [
 ];
 
 $errorsClass = [
-        'movie_name' => false,
-        'date' => false,
-        'duration' => false,
-        'synopsis' =>false,
-        'poster' => false,
-        'trailer' => false,
-        'note_press' => false
+    'movie_name' => false,
+    'date' => false,
+    'duration' => false,
+    'synopsis' => false,
+    'poster' => false,
+    'trailer' => false,
+    'note_press' => false
 ];
 
 $globalMessage = [
     'class' => 'd-none',
     'message' => false
 ];
+
 
 if (empty($_GET['id']) || empty($poster)) {
     $imgPoster = 'd-none';
@@ -32,15 +48,15 @@ if (empty($_GET['id']) || empty($poster)) {
 
 if (!empty($_POST)) {
     $isUpdate = isset($_GET['id']) && is_numeric($_GET['id']);
-    
+
     $movieName = getValue('movie_name');
     $notePress = getValue('note_press');
     $date = getValue('date');
     $duration = getValue('duration');
     $synopsis = getValue('synopsis');
     $trailer = getValue('trailer');
-    
-    
+
+
     // Validation du titre du film
     if (empty($movieName)) {
         $errorsMessage['movie_name'] = '<span class="invalid-feedback">Le titre du film est obligatoire.</span>';
@@ -55,9 +71,9 @@ if (!empty($_POST)) {
             }
         }
     }
-    
+
     $movieSlug = renameFile($movieName);
-    
+
     // Validation de la date du film
     if (empty($date)) {
         $errorsMessage['date'] = '<span class="invalid-feedback">La date du film est obligatoire.</span>';
@@ -69,7 +85,7 @@ if (!empty($_POST)) {
             $errorsClass['date'] = 'is-invalid';
         }
     }
-    
+
     // Validation de la durée du film
     if (empty($duration)) {
         $errorsMessage['duration'] = '<span class="invalid-feedback">La durée du film est obligatoire.</span>';
@@ -81,13 +97,13 @@ if (!empty($_POST)) {
             $errorsClass['duration'] = 'is-invalid';
         }
     }
-    
+
     // Validation du synopsis du film
     if (empty($synopsis)) {
         $errorsMessage['synopsis'] = '<span class="invalid-feedback">Le synopsis du film est obligatoire.</span>';
         $errorsClass['synopsis'] = 'is-invalid';
     }
-    
+
     // Validation de la note de presse
     if (isset($notePress) && !empty($notePress)) {
         $regexDuration = '/^(?:10|\d(?:\.\d{1,2})?)$/';
@@ -101,11 +117,11 @@ if (!empty($_POST)) {
     }
     if (count(array_filter($errorsMessage)) == 0) {
 
-        
-        
+
+
         if (!empty($_FILES['poster']['name'])) {
-            
-            
+
+
             $uploadPath = 'uploads';
 
             $uploadResult = uploadFile($uploadPath, 'poster');
@@ -171,4 +187,3 @@ if (!empty($_POST)) {
         $errorsClass['poster'] = 'is-invalid';
     }
 }
-

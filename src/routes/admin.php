@@ -14,16 +14,13 @@ $router->map('GET|POST', $admin . '/utilisateurs/editer', 'users/admin_edit', 'a
 $router->map('GET|POST', $admin . '/utilisateurs/supprimer/[uuid:id]', 'users/admin_delete', 'deleteUser'); // 6
 
 //Movies
-$router->map('GET', $admin . '/films', '', '');
 $router->map('GET|POST', $admin . '/films/editer', 'movies/admin_moviesEdit', 'moviesEdit');
 $router->map('GET|POST', $admin . '/films/editer/[i:id]', 'movies/admin_moviesEdit', '');
 $router->map('GET|POST', $admin . '/films/bibliotheque', 'movies/admin_moviesRead', 'library');
-$router->map('GET|POST', $admin . '/films/image', 'movies/admin_moviesImage', 'image');
 $router->map('GET|POST', $admin . '/films/supprimer/[i:id]', 'movies/admin_moviesDelete', 'moviesDelete');
 
 
 //Categories
 $router->map('GET', $admin . '/categories', '', '');
-$router->map('GET', $admin . '/categories/editer[i:id]', '', '');
+$router->map('GET|POST', $admin . '/categories/editer', 'categories/admin_categoryEdit', 'categoryEdit');
 $router->map('GET', $admin . '/categories/supprimer[i:id]', '', '');
-
