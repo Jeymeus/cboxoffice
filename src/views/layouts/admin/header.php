@@ -33,6 +33,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $router->generate('moviesEdit'); ?>">Ajouter | Modifier Films</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $router->generate('categories'); ?>">Catégories</a>
+                        </li>
                     </ul>
                     <div class="navbar-text">
                         <a href="<?= $router->generate('deconnect') ?>" class="btn btn-danger">Déconnexion</a>

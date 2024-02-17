@@ -21,6 +21,6 @@ $router->map('GET|POST', $admin . '/films/supprimer/[i:id]', 'movies/admin_movie
 
 
 //Categories
-$router->map('GET', $admin . '/categories', '', '');
+$router->map('GET|POST', $admin . '/categories', 'categories/admin_categoryRead', 'categories');
 $router->map('GET|POST', $admin . '/categories/editer', 'categories/admin_categoryEdit', 'categoryEdit');
-$router->map('GET', $admin . '/categories/supprimer[i:id]', '', '');
+$router->map('GET', $admin . '/categories/supprimer[i:id]', 'categories/admin_categoryDelete', 'categoryDelete');

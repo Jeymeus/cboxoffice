@@ -5,26 +5,21 @@
 
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Symfony\Component\VarDumper\Server\DumpServer;
 
-$movieName = '';
-$notePress = '';
-$date = '';
-$duration = '';
-$synopsis = '';
-$poster = '';
-$trailer = '';
+
 $formTitle = 'Ajouter un Film';
 $submitButtonLabel = 'Ajouter Film';
 
+
 if (isset($_GET['id'])) {
     $movieId = $_GET['id'];
-
-    // Assurez-vous que $movieId est un entier
+    
     $movieId = intval($movieId);
     $movieDetails = getMovieById($movieId);
-
+    
     if ($movieDetails) {
-
+        
         $movieName = $movieDetails['title'];
         $notePress = $movieDetails['note_press'];
         $date = $movieDetails['date'];
@@ -32,19 +27,30 @@ if (isset($_GET['id'])) {
         $synopsis = $movieDetails['synopsis'];
         $poster = $movieDetails['poster'];
         $trailer = $movieDetails['trailer'];
-
+        
         $formTitle = 'Modifier un Film';
         $submitButtonLabel = 'Modifier';
     }
-} else  {
+    
+} else {
+    
+    
+    $movieName = $_SESSION['movieName'] ?? getValue('movie_name');
+    $notePress = $_SESSION['notePress'] ?? getValue('note_press');
+    $date = $_SESSION['date'] ?? getValue('date');
+    $duration = $_SESSION['duration'] ?? getValue('duration');
+    $synopsis = $_SESSION['synopsis'] ?? getValue('synopsis');
+    $trailer = $_SESSION['trailer'] ?? getValue('trailer');
+    
+    unset($_SESSION['movieName']);
+    unset($_SESSION['notePress']);
+    unset($_SESSION['date']);
+    unset($_SESSION['duration']);
+    unset($_SESSION['synopsis']);
+    unset($_SESSION['trailer']);
 
-    $movieName = getValue('movie_name');
-    $notePress = getValue('note_press');
-    $date = getValue('date');
-    $duration = getValue('duration');
-    $synopsis = getValue('synopsis');
-    $poster = getValue('poster');
-    $trailer = getValue('trailer');
+    // dump($_SESSION);
+
 }
 
 function getMovies()

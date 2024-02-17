@@ -36,6 +36,10 @@
         background-color: #ccc;
     }
 
+       .action-cell {
+        text-align: center !important;
+    }
+
 
     .action-buttons {
         display: flex;
@@ -53,7 +57,7 @@
     <thead>
         <tr>
             <th scope="col">Email</th>
-            <th scope="col"></th>
+            <th class="action-cell" scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>

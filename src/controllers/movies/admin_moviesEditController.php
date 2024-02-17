@@ -2,15 +2,16 @@
 
 
 
-$_SESSION['movieName'] = $movieName;
-$_SESSION['notePress'] = $notePress;
-$_SESSION['date'] = $date;
-$_SESSION['duration'] = $duration;
-$_SESSION['synopsis'] = $synopsis;
-$_SESSION['trailer'] = $trailer;
+
 
 // Assurez-vous que le formulaire a été soumis et que le bouton "Ajouter Catégorie" a été cliqué
 if (isset($_POST['new-category'])) {
+    $_SESSION['movieName'] = $movieName;
+    $_SESSION['notePress'] = $notePress;
+    $_SESSION['date'] = $date;
+    $_SESSION['duration'] = $duration;
+    $_SESSION['synopsis'] = $synopsis;
+    $_SESSION['trailer'] = $trailer;
     header('Location: ' . $router->generate('categoryEdit'));
     exit();
 }
