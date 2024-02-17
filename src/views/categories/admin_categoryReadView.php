@@ -68,7 +68,9 @@ get_header('Edit Films', 'admin');
     }
 </style>
 
+<h2>Liste des utilisateurs</h2>
 
+<a href="<?= $router->generate('categoryEdit'); ?>" class="btn btn-success">Ajouter</a>
 
 <div class="wrapper">
     <table class="movie-table">
