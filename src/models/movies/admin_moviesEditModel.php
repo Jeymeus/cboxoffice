@@ -53,6 +53,11 @@ if (isset($_GET['id'])) {
 
 }
 
+/**
+ * Fetches the list of all movies from the database.
+ * 
+ * @return array An array containing details of all movies (titles, dates, durations, synopses, posters, trailers, press notes)
+ */
 function getMovies()
 {
     global $db;
@@ -64,45 +69,50 @@ function getMovies()
     return $query->fetchAll();
 }
 
+/**
+ * Checks if a movie title already exists in the database.
+ * 
+ * @return bool True if the title already exists and doesn't match the given ID, false otherwise
+ */
 function checkAlreadyExistTitle()
 {
     global $db;
     global $movieId;
 
-    // Requête SQL pour vérifier si le titre existe déjà dans la base de données
     $sql = 'SELECT title FROM movies WHERE title = :title';
     $query = $db->prepare($sql);
     $query->bindParam(':title', $_POST['movie_name']);
     $query->execute();
     $existingTitle = $query->fetch();
 
-    // Si le titre existe déjà et ne correspond pas à celui de l'ID donné
+    // If the title already exists and doesn't match the given ID
     if (!empty($existingTitle)) {
-        if ($movieId) {
+        if ($movieId) { // If a movie ID is provided
+            // Check if the existing title belongs to the given ID
             $sql = 'SELECT title FROM movies WHERE id = :id';
             $query = $db->prepare($sql);
             $query->bindParam(':id', $movieId);
             $query->execute();
             $titleById = $query->fetch();
+
             if ($titleById && $titleById->title === $_POST['movie_name']) {
-                return false; // Le titre correspond à celui de l'ID donné
+                return false; // The title matches the given ID
             } else {
-                return true; // Le titre existe mais ne correspond pas à celui de l'ID donné
+                return true; // The title exists but doesn't match the given ID
             }
         }
-        return true; // Le titre existe mais aucun ID n'est donné
+        return true; // The title exists but no ID is given
     }
-    return false; // Le titre n'existe pas
+    return false; // The title doesn't exist
 }
 
-
-
-
-
-
-
-
-function checkAlreadyExistFile($targetToSave): mixed
+/**
+ * Checks if a poster already exists in the database.
+ * 
+ * @param string $targetToSave The poster name to check
+ * @return mixed The existing poster if found, an empty array otherwise
+ */
+function checkAlreadyExistFile(string $targetToSave): mixed
 {
     global $db;
     $sql = 'SELECT poster FROM movies WHERE poster = :poster';
@@ -115,10 +125,14 @@ function checkAlreadyExistFile($targetToSave): mixed
     return $posterExist ? $posterExist : [];
 }
 
-
+/**
+ * Inserts a new movie record into the database.
+ * 
+ * @param string $movieSlug The slug of the movie
+ * @param string $targetToSave The name of the poster file
+ */
 function insertMovie($movieSlug, $targetToSave)
 {
-
     global $db;
     global $router;
     $data = [
@@ -129,11 +143,12 @@ function insertMovie($movieSlug, $targetToSave)
         'synopsis' => $_POST['synopsis'],
         'poster' => $targetToSave,
         'note_press' => $_POST['note_press'],
+        'trailer' => $_POST['trailer'], // Ajout du champ trailer
     ];
 
     try {
 
-        $sql = "INSERT INTO movies (title, slug, date, duration, synopsis, poster, note_press) VALUES (:movie_name, :slug, :date, :duration, :synopsis, :poster, :note_press)";
+        $sql = "INSERT INTO movies (title, slug, date, duration, synopsis, poster, note_press, trailer) VALUES (:movie_name, :slug, :date, :duration, :synopsis, :poster, :note_press, :trailer)";
 
         $query = $db->prepare($sql);
         $query->execute($data);
@@ -145,7 +160,13 @@ function insertMovie($movieSlug, $targetToSave)
     }
 }
 
-function updateMovie($movieId, $targetToSave)
+/**
+ * Updates an existing movie record in the database.
+ * 
+ * @param int $movieId The ID of the movie to update
+ * @param string $targetToSave The name of the poster file
+ */
+function updateMovie(int $movieId, string $targetToSave)
 {
     global $db;
     global $router;
@@ -157,12 +178,12 @@ function updateMovie($movieId, $targetToSave)
         'synopsis' => $_POST['synopsis'],
         'poster' => $targetToSave,
         'note_press' => $_POST['note_press'],
+        'trailer' => $_POST['trailer'], // Ajout du champ trailer
+        'movieId' => $movieId,
     ];
 
     try {
-        $sql = 'UPDATE movies SET title = :movie_name, date = :date, duration = :duration, synopsis = :synopsis, poster = :poster, note_press = :note_press WHERE id = :movieId';
-
-        $data['movieId'] = $movieId;
+        $sql = 'UPDATE movies SET title = :movie_name, date = :date, duration = :duration, synopsis = :synopsis, poster = :poster, note_press = :note_press, trailer = :trailer WHERE id = :movieId';
 
         $query = $db->prepare($sql);
         $query->execute($data);
@@ -174,8 +195,13 @@ function updateMovie($movieId, $targetToSave)
     }
 }
 
-
-function uploadMovieLessPoster($movieId)
+/**
+ * Updates an existing movie record in the database.
+ * 
+ * @param int $movieId The ID of the movie to update
+ * @param string $targetToSave The name of the poster file
+ */
+function uploadMovieLessPoster(int $movieId)
 {
     global $db;
     global $router;
@@ -186,12 +212,12 @@ function uploadMovieLessPoster($movieId)
         'duration' => $_POST['duration'],
         'synopsis' => $_POST['synopsis'],
         'note_press' => $_POST['note_press'],
+        'trailer' => $_POST['trailer'],
+        'movieId' => $movieId,
     ];
 
     try {
-        $sql = 'UPDATE movies SET title = :movie_name, date = :date, duration = :duration, synopsis = :synopsis, note_press = :note_press WHERE id = :movieId';
-
-        $data['movieId'] = $movieId;
+        $sql = 'UPDATE movies SET title = :movie_name, date = :date, duration = :duration, synopsis = :synopsis, note_press = :note_press, trailer = :trailer WHERE id = :movieId';
 
         $query = $db->prepare($sql);
         $query->execute($data);
@@ -250,7 +276,14 @@ function uploadFile(string $path, string $field, array $exts = ['jpg', 'png', 'j
     return ['messagePoster' => $messageUploadFile, 'path' => $targetToSave];
 }
 
-function formatBytes($size, $precision = 2)
+/**
+ * Formats a file size in bytes to a human-readable format.
+ * 
+ * @param int $size The file size in bytes
+ * @param int $precision The number of decimal places to round to (default is 2)
+ * @return string The formatted file size with appropriate suffix (e.g., KB, MB)
+ */
+function formatBytes(int $size, int $precision = 2)
 {
     $base     = log($size, 1024);
     $suffixes = ['', 'Ko', 'Mo', 'Go', 'To'];
@@ -258,6 +291,12 @@ function formatBytes($size, $precision = 2)
     return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
 }
 
+/**
+ * Renames a file name to make it safe and standardized.
+ * 
+ * @param string $name The original file name
+ * @return string The sanitized and standardized file name
+ */
 function renameFile(string $name)
 {
     $name = trim($name);
@@ -272,6 +311,12 @@ function renameFile(string $name)
     return $name;
 }
 
+/**
+ * Removes accents from characters in a string.
+ * 
+ * @param string $string The input string with accents
+ * @return string The string with accents removed
+ */
 function removeAccent($string)
 {
     $string = str_replace(
@@ -282,6 +327,12 @@ function removeAccent($string)
     return $string;
 }
 
+/**
+ * Resize the poster image to specific dimensions.
+ * 
+ * @param ImageManager $manager The ImageManager instance
+ * @param string $targetToSave The path to the image file to be resized
+ */
 function resizePoster($manager, $targetToSave)
 {
 
@@ -292,6 +343,11 @@ function resizePoster($manager, $targetToSave)
     $image->save($targetToSave);
 }
 
+/**
+ * Retrieve all categories from the database.
+ * 
+ * @return array An array containing all categories
+ */
 function getCategory()
 {
     global $db;
@@ -305,6 +361,11 @@ function getCategory()
 
 $allCategory = getCategory();
 
+/**
+ * Retrieve categories associated with a specific movie from the database.
+ * 
+ * @return array An array containing categories associated with the movie
+ */
 function getCategoryByMovie()
 {
 
@@ -334,24 +395,17 @@ function updateCategory()
     global $db;
     global $movieId;
 
-    // Récupérez les catégories déjà associées au film depuis la base de données
     $existingCategories = getCategoryByMovie($movieId);
 
-    // Initialisez un tableau pour stocker les ID des catégories déjà associées
     $existingCategoryIds = [];
-
-    // Stockez les ID des catégories déjà associées au film dans un tableau
     foreach ($existingCategories as $existingCategory) {
         $existingCategoryIds[] = $existingCategory->id;
     }
 
-    // Récupérez toutes les catégories disponibles
     $allCategories = getCategory();
 
-    // Initialisez un tableau pour stocker les catégories sélectionnées dans le formulaire
     $selectedCategories = [];
 
-    // Parcourez toutes les catégories disponibles et vérifiez si elles ont été cochées dans le formulaire
     foreach ($allCategories as $category) {
         $categoryId = $category->id;
         if (in_array($categoryId, $_POST['categories'])) {
@@ -359,11 +413,11 @@ function updateCategory()
         }
     }
 
-    // Comparez les catégories déjà associées avec les nouvelles catégories sélectionnées
+    // Compare the existing associated categories with the newly selected categories
     $categoriesToDelete = array_diff($existingCategoryIds, $selectedCategories);
     $categoriesToAdd = array_diff($selectedCategories, $existingCategoryIds);
 
-    // Supprimez les catégories désélectionnées de la table movie_category
+    // Delete deselected categories from the movie_category table
     foreach ($categoriesToDelete as $categoryId) {
         $sql = 'DELETE FROM movie_category WHERE movie_id = :movie_id AND category_id = :category_id';
         $query = $db->prepare($sql);
@@ -372,7 +426,7 @@ function updateCategory()
         $query->execute();
     }
 
-    // Ajoutez les nouvelles catégories sélectionnées à la table movie_category
+    // Add newly selected categories to the movie_category table
     foreach ($categoriesToAdd as $categoryId) {
         $sql = 'INSERT INTO movie_category (movie_id, category_id) VALUES (:movie_id, :category_id)';
         $query = $db->prepare($sql);
@@ -382,7 +436,4 @@ function updateCategory()
     }
 }
 
-// Appeler la fonction updateCategory() si le formulaire a été soumis
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($movieId)) {
-    updateCategory();
-}
+

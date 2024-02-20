@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 // Assurez-vous que le formulaire a été soumis et que le bouton "Ajouter Catégorie" a été cliqué
 if (isset($_POST['new-category'])) {
     $_SESSION['movieName'] = $movieName;
@@ -24,6 +20,7 @@ $errorsMessage = [
     'poster' => false,
     'trailer' => false,
     'note_press' => false,
+    'categories' => false
 ];
 
 $errorsClass = [
@@ -33,7 +30,8 @@ $errorsClass = [
     'synopsis' => false,
     'poster' => false,
     'trailer' => false,
-    'note_press' => false
+    'note_press' => false,
+    'categories' => false
 ];
 
 $globalMessage = [
@@ -116,6 +114,14 @@ if (!empty($_POST)) {
         $errorsMessage['note_press'] = '<span class="invalid-feedback">La note est obligatoire.</span>';
         $errorsClass['note_press'] = 'is-invalid';
     }
+
+    // Call the updateCategory() function if the form has been submitted
+    if (empty($_POST['categories'])) {
+        $errorsMessage['categories'] = '<div><p class="text-danger">Merci de sélectionner au moins une catégorie.</p></div>';
+        $errorsClass['categories'] = 'bg-danger text-white';
+        
+    }
+
     if (count(array_filter($errorsMessage)) == 0) {
 
 
@@ -148,6 +154,7 @@ if (!empty($_POST)) {
                             alert('Erreur lors de la modification');
                         }
                         alert('Le film a été modifié avec succès', 'success');
+                        updateCategory();
                         uploadMovieLessPoster($movieId);
                     } else {
                         // If the ID doesn't match the poster, 
@@ -165,6 +172,7 @@ if (!empty($_POST)) {
                     }
                     alert('Le film a été modifié avec succès', 'success');
                     resizePoster($manager, $targetToSave);
+                    updateCategory();
                     updateMovie($movieId, $targetToSave);
                 }
                 // If ID and film do not exist, insertion
@@ -177,11 +185,13 @@ if (!empty($_POST)) {
                     }
                     alert('Le film a été ajouté avec succès', 'success');
                     resizePoster($manager, $targetToSave);
+                    updateCategory();
                     insertMovie($movieSlug, $targetToSave);
                 }
             }
         } elseif (!empty($isUpdate)) {
             alert('Le film a été modifié sans le poster', 'success');
+            updateCategory();
             uploadMovieLessPoster($movieId);
         }
         alert('Merci d\'insérer une affiche');

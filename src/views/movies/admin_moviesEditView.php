@@ -122,7 +122,7 @@
             <label for="floatingSynopsis">Synopsis</label>
             <?= $errorsMessage['synopsis']; ?>
         </div>
-        <h4 class="mb-4">Catégories</h4>
+        <h4 class="mb-4 <?= $errorsClass['categories'] ?>">Catégories</h4>
         <?php foreach ($allCategory as $cat) {
             $checked = false;
             foreach ($categoryByMovies as $catMovie) {
@@ -137,8 +137,9 @@
                 <label class="form-check-label" for="<?= htmlentities($cat->name); ?>"><?= htmlentities($cat->name); ?></label>
             </div>
         <?php } ?>
+        <?= $errorsMessage['categories'] ?>
         <div class="form-floating mb-4">
-           <button type="submit" name="new-category" class="btn btn-danger">Ajouter Catégorie</button>
+            <button type="submit" name="new-category" class="btn btn-warning mt-2">Créer une catégorie</button>
         </div>
         <div class="display">
             <div class="poster mb-4">
