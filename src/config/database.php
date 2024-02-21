@@ -5,8 +5,7 @@ try {
 } catch (PDOException $e) {
     if ($_ENV['DEBUG']) {
         dump($e->getMessage());
-    } else {
-        echo 'Erreur de connexion à la base de données';
-        die;
+   } else {
+        die('Erreur de connexion à la base de données');
     }
 }

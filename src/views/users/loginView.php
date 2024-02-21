@@ -41,12 +41,12 @@
                 <?= $error['message']; ?>
             </div>
             <div class="form-floating ">
-                <input type="text" class="form-control d-none" id="bot_field" name="bot_field" placeholder="Entreprise">
+                <input type="text" class="form-control d-none" id="bot_field" name="bot_field" placeholder="Enterprise">
                 <label for="bot_field"></label>
             </div>
             <div class="form-floating">
                 <?php $error = checkEmptyFields('pwd'); ?>
-                <input type="password" class="form-control <?= $error['class'] ?>" id="floatingPassword" name="pwd" placeholder="Mot de passe" value="Azerty123456!">
+                <input type="password" class="form-control <?= $error['class'] ?>" id="floatingPassword" name="pwd" placeholder="Mot de passe">
                 <label for="floatingPassword">Mot de passe</label>
                 <?= $error['message']; ?>
             </div>
