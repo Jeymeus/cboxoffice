@@ -3,14 +3,13 @@
 }
 
 body {
-  background: transparent
-    radial-gradient(closest-side at 50% 50%, #a81e1e 0%, #540f0f 100%) 0% 0%
-    no-repeat padding-box;
+  background: transparent radial-gradient(closest-side at 50% 50%, #a81e1e 0%, #540f0f 100%) 0% 0% no-repeat padding-box;
   opacity: 1;
   height: 5000px;
   font-family: "Lato", sans-serif;
   color: #fff;
   font-size: 16px;
+  line-height: 2rem;
 }
 
 // pour le reste de mon css j'utilise le rem (ratio par rapport à a taille définit dans le body)  (tandis que em est en rapport avec le parent)

@@ -6,13 +6,12 @@ section {
 
   .displayStartVert {
     display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     margin-top: 20px;
 
-    h1 {
-      margin-right: 10%;
+    #titleDetail {
+      width: 40%;
     }
   }
 
@@ -30,11 +29,6 @@ section {
     width: 50px;
   }
 
-  #press {
-    position: relative;
-    // margin-top: 29px;
-    margin-left: 65%;
-  }
 
   .press {
     position: absolute;

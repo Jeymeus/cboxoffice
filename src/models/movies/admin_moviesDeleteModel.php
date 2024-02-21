@@ -40,6 +40,13 @@ function deleteMovie($movieId)
     global $router;
 
     try {
+        // Supprimer les entrées associées dans la table movie_category
+        $deleteMovieCategory = "DELETE FROM movie_category WHERE movie_id = :movieId";
+        $statementMovieCategory = $db->prepare($deleteMovieCategory);
+        $statementMovieCategory->bindParam(':movieId', $movieId, PDO::PARAM_INT);
+        $statementMovieCategory->execute();
+
+        // Supprimer le film de la table movies
         $deleteMovie = "DELETE FROM movies WHERE id = :movieId";
         $statement = $db->prepare($deleteMovie);
         $statement->bindParam(':movieId', $movieId, PDO::PARAM_INT);

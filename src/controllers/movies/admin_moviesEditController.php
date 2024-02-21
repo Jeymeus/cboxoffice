@@ -1,5 +1,8 @@
 <?php
 
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 // Assurez-vous que le formulaire a été soumis et que le bouton "Ajouter Catégorie" a été cliqué
 if (isset($_POST['new-category'])) {
     $_SESSION['movieName'] = $movieName;
@@ -133,6 +136,8 @@ if (!empty($_POST)) {
 
             $uploadResult = uploadFile($uploadPath, 'poster');
 
+            $manager = new ImageManager(new Driver());
+
             if (!empty($uploadResult['messagePoster'])) {
                 $errorsMessage['poster'] = '<span class="invalid-feedback">' . $uploadResult['messagePoster'] . '</span>';
                 $errorsClass['poster'] = 'is-invalid';
@@ -154,8 +159,10 @@ if (!empty($_POST)) {
                             alert('Erreur lors de la modification');
                         }
                         alert('Le film a été modifié avec succès', 'success');
-                        updateCategory();
                         uploadMovieLessPoster($movieId);
+                        updateCategory($lastInsertedId);
+                        header('Location: ' . $router->generate('library'));
+                        exit();
                     } else {
                         // If the ID doesn't match the poster, 
                         $errorsMessage['poster'] = '<span class="invalid-feedback">Une affiche du même nom existe.</span>';
@@ -172,8 +179,10 @@ if (!empty($_POST)) {
                     }
                     alert('Le film a été modifié avec succès', 'success');
                     resizePoster($manager, $targetToSave);
-                    updateCategory();
                     updateMovie($movieId, $targetToSave);
+                    updateCategory($lastInsertedId);
+                    header('Location: ' . $router->generate('library'));
+                    exit();
                 }
                 // If ID and film do not exist, insertion
                 elseif (!isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
@@ -185,14 +194,18 @@ if (!empty($_POST)) {
                     }
                     alert('Le film a été ajouté avec succès', 'success');
                     resizePoster($manager, $targetToSave);
-                    updateCategory();
-                    insertMovie($movieSlug, $targetToSave);
+                    $lastInsertedId = insertMovie($movieSlug, $targetToSave);
+                    updateCategory($lastInsertedId);
+                    header('Location: ' . $router->generate('library'));
+                    exit();
                 }
             }
         } elseif (!empty($isUpdate)) {
             alert('Le film a été modifié sans le poster', 'success');
-            updateCategory();
             uploadMovieLessPoster($movieId);
+            updateCategory($lastInsertedId);
+            header('Location: ' . $router->generate('library'));
+            exit();
         }
         alert('Merci d\'insérer une affiche');
         $errorsClass['poster'] = 'is-invalid';

@@ -3,7 +3,7 @@
 
 
 
-use Intervention\Image\ImageManager;
+
 use Intervention\Image\Drivers\Gd\Driver;
 use Symfony\Component\VarDumper\Server\DumpServer;
 
@@ -14,12 +14,12 @@ $submitButtonLabel = 'Ajouter Film';
 
 if (isset($_GET['id'])) {
     $movieId = $_GET['id'];
-    
+
     $movieId = intval($movieId);
     $movieDetails = getMovieById($movieId);
-    
+
     if ($movieDetails) {
-        
+
         $movieName = $movieDetails['title'];
         $notePress = $movieDetails['note_press'];
         $date = $movieDetails['date'];
@@ -27,21 +27,20 @@ if (isset($_GET['id'])) {
         $synopsis = $movieDetails['synopsis'];
         $poster = $movieDetails['poster'];
         $trailer = $movieDetails['trailer'];
-        
+
         $formTitle = 'Modifier un Film';
         $submitButtonLabel = 'Modifier';
     }
-    
 } else {
-    
-    
+
+
     $movieName = $_SESSION['movieName'] ?? getValue('movie_name');
     $notePress = $_SESSION['notePress'] ?? getValue('note_press');
     $date = $_SESSION['date'] ?? getValue('date');
     $duration = $_SESSION['duration'] ?? getValue('duration');
     $synopsis = $_SESSION['synopsis'] ?? getValue('synopsis');
     $trailer = $_SESSION['trailer'] ?? getValue('trailer');
-    
+
     unset($_SESSION['movieName']);
     unset($_SESSION['notePress']);
     unset($_SESSION['date']);
@@ -134,7 +133,6 @@ function checkAlreadyExistFile(string $targetToSave): mixed
 function insertMovie($movieSlug, $targetToSave)
 {
     global $db;
-    global $router;
     $data = [
         'movie_name' => $_POST['movie_name'],
         'slug' => $movieSlug,
@@ -147,16 +145,18 @@ function insertMovie($movieSlug, $targetToSave)
     ];
 
     try {
-
         $sql = "INSERT INTO movies (title, slug, date, duration, synopsis, poster, note_press, trailer) VALUES (:movie_name, :slug, :date, :duration, :synopsis, :poster, :note_press, :trailer)";
-
         $query = $db->prepare($sql);
         $query->execute($data);
 
-        header('Location: ' . $router->generate('library'));
-        exit();
+        $lastInsertedId = $db->lastInsertId();
+
+        // header('Location: ' . $router->generate('library'));
+        // exit();
+
+        return $lastInsertedId;
     } catch (PDOException $e) {
-        $e->getMessage();
+        echo $e->getMessage();
     }
 }
 
@@ -188,8 +188,8 @@ function updateMovie(int $movieId, string $targetToSave)
         $query = $db->prepare($sql);
         $query->execute($data);
 
-        header('Location: ' . $router->generate('library'));
-        exit();
+        // header('Location: ' . $router->generate('library'));
+        // exit();
     } catch (PDOException $e) {
         echo 'Erreur de mise à jour : ' . $e->getMessage();
     }
@@ -222,8 +222,8 @@ function uploadMovieLessPoster(int $movieId)
         $query = $db->prepare($sql);
         $query->execute($data);
 
-        header('Location: ' . $router->generate('library'));
-        exit();
+        // header('Location: ' . $router->generate('library'));
+        // exit();
     } catch (PDOException $e) {
         echo 'Erreur de mise à jour : ' . $e->getMessage();
     }
@@ -336,7 +336,6 @@ function removeAccent($string)
 function resizePoster($manager, $targetToSave)
 {
 
-    $manager = new ImageManager(new Driver());
     $image = $manager->read($targetToSave);
     $image->resize(height: 500);
     $image->resize(width: 350);
@@ -390,50 +389,65 @@ $categoryByMovies = getCategoryByMovie();
 
 
 // Définition de la fonction pour mettre à jour les catégories associées à un film
-function updateCategory()
+function updateCategory($lastInsertedId)
 {
     global $db;
     global $movieId;
 
     $existingCategories = getCategoryByMovie($movieId);
 
-    $existingCategoryIds = [];
-    foreach ($existingCategories as $existingCategory) {
-        $existingCategoryIds[] = $existingCategory->id;
-    }
+    // If no existing categories found, insert the selected categories
+    if (empty(getCategoryByMovie($lastInsertedId))) {
+        $allCategories = getCategory();
 
-    $allCategories = getCategory();
+        foreach ($allCategories as $category) {
+            $categoryId = $category->id;
+            if (in_array($categoryId, $_POST['categories'])) {
+                $sql = 'INSERT INTO movie_category (movie_id, category_id) VALUES (:movie_id, :category_id)';
+                $query = $db->prepare($sql);
+                $query->bindParam(':movie_id', $lastInsertedId, PDO::PARAM_INT);
+                $query->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+                $query->execute();
+            }
+        }
+    } else {
+        // Existing categories found, proceed with update logic
+        $existingCategoryIds = [];
+        foreach ($existingCategories as $existingCategory) {
+            $existingCategoryIds[] = $existingCategory->id;
+        }
 
-    $selectedCategories = [];
+        $allCategories = getCategory();
 
-    foreach ($allCategories as $category) {
-        $categoryId = $category->id;
-        if (in_array($categoryId, $_POST['categories'])) {
-            $selectedCategories[] = $categoryId;
+        $selectedCategories = [];
+
+        foreach ($allCategories as $category) {
+            $categoryId = $category->id;
+            if (in_array($categoryId, $_POST['categories'])) {
+                $selectedCategories[] = $categoryId;
+            }
+        }
+
+        // Compare the existing associated categories with the newly selected categories
+        $categoriesToDelete = array_diff($existingCategoryIds, $selectedCategories);
+        $categoriesToAdd = array_diff($selectedCategories, $existingCategoryIds);
+
+        // Delete deselected categories from the movie_category table
+        foreach ($categoriesToDelete as $categoryId) {
+            $sql = 'DELETE FROM movie_category WHERE movie_id = :movie_id AND category_id = :category_id';
+            $query = $db->prepare($sql);
+            $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
+            $query->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+            $query->execute();
+        }
+
+        // Add newly selected categories to the movie_category table
+        foreach ($categoriesToAdd as $categoryId) {
+            $sql = 'INSERT INTO movie_category (movie_id, category_id) VALUES (:movie_id, :category_id)';
+            $query = $db->prepare($sql);
+            $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
+            $query->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+            $query->execute();
         }
     }
-
-    // Compare the existing associated categories with the newly selected categories
-    $categoriesToDelete = array_diff($existingCategoryIds, $selectedCategories);
-    $categoriesToAdd = array_diff($selectedCategories, $existingCategoryIds);
-
-    // Delete deselected categories from the movie_category table
-    foreach ($categoriesToDelete as $categoryId) {
-        $sql = 'DELETE FROM movie_category WHERE movie_id = :movie_id AND category_id = :category_id';
-        $query = $db->prepare($sql);
-        $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
-        $query->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
-        $query->execute();
-    }
-
-    // Add newly selected categories to the movie_category table
-    foreach ($categoriesToAdd as $categoryId) {
-        $sql = 'INSERT INTO movie_category (movie_id, category_id) VALUES (:movie_id, :category_id)';
-        $query = $db->prepare($sql);
-        $query->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
-        $query->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
-        $query->execute();
-    }
 }
-
-

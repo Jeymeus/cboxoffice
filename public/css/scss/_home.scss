@@ -7,6 +7,8 @@
   article {
     width: 30%;
     margin-bottom: 30px;
+    position: relative;
+    text-align: center;
   }
 
   img {
@@ -15,7 +17,11 @@
   }
 
   h2 {
-    background-color: aqua;
+    width: 100%;
+    background-color: #a81e1e;
     padding: 5px 0;
+    position: absolute;
+    top: 0%;
+    border-radius: 20px 20px 0 0;
   }
 }
