@@ -1,5 +1,6 @@
 <?php
 
+// Store form data in session variables
 $_SESSION['movieName'] = $movieName;
 $_SESSION['notePress'] = $notePress;
 $_SESSION['date'] = $date;
@@ -7,23 +8,26 @@ $_SESSION['duration'] = $duration;
 $_SESSION['synopsis'] = $synopsis;
 $_SESSION['trailer'] = $trailer;
 
-
+// Initialize variables for category inputs 
 $category1 = '';
 $category2 = '';
 $category3 = '';
 
 $errorsClass = [
-'category1' => false,
-'category2' => false,
-'category3' => false,
+    'category1' => false,
+    'category2' => false,
+    'category3' => false,
 ];
 
+// Check if form is submitted
 if (!empty($_POST)) {
     $category1 = getValue('category1');
     $category2 = getValue('category2');
     $category3 = getValue('category3');
+
     $regexCategory = '/^[a-zA-Z\s\-]+$/';
 
+    // Validate and process each category input
     if (!empty($category1)) {
         if (preg_match($regexCategory, $category1)) {
             if (!categoryExists($category1)) {
@@ -66,7 +70,9 @@ if (!empty($_POST)) {
         }
     }
 
+    // Check if all category inputs are empty
     if (empty($category1) && empty($category2) && empty($category3)) {
         alert('Merci de renseigner au moins un champ.');
     }
 }
+?>

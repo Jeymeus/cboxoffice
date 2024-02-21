@@ -1,8 +1,11 @@
 <?php
 
 /**
- * Get all users
+ * Retrieves all users from the database.
+ *
+ * @return object Returns an object containing the IDs and emails of all users.
  */
+
 function getUsers()
 {
     global $db;

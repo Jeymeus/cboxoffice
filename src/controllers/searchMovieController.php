@@ -1,24 +1,19 @@
 <?php
 
-
-// Récupérer le terme de recherche depuis le formulaire
+// Retrieve the search term from the form
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Vérifier si $search n'est pas vide
+// Check if $search is not empty
 if (!empty($search)) {
     $searchMovies = userSearchMovies($search);
 
-    $data['searchMovies']= $searchMovies;
-
+    $data['searchMovies'] = $searchMovies;
 } else {
-    // Si le terme de recherche est vide, redirigez vers la page d'accueil
+    // If the search term is empty, redirect to the homepage
     header("Location: index.php");
-    exit(); // Assurez-vous que le script s'arrête après la redirection
+    exit(); 
 }
-
-
-
-
+?>
 
 
 

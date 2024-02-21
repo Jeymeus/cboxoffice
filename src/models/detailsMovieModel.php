@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Retrieves details of a movie based on its slug.
+ *
+ * @return mixed Returns an associative array containing details of the movie if found, or null otherwise.
+ */
 function detailsMovie()
 {
 
@@ -12,6 +17,11 @@ function detailsMovie()
     return $query->fetch();
 }
 
+/**
+ * Retrieves categories associated with a movie based on its slug.
+ *
+ * @return array Returns an array of categories associated with the movie.
+ */
 function category()
 {
     global $db;
@@ -28,17 +38,17 @@ function category()
 }
 
 
-
+/**
+ * Converts duration in minutes to hours and minutes format.
+ *
+ * @param int $movie The duration of the movie in minutes.
+ * @return string The duration of the movie in hours and minutes format.
+ */
 function durationMovie($movie)
 {
-    // Récupérer la durée en minutes depuis la base de données (exemple : $durationFromDB)
-    $durationFromDB = $movie; // Remplacez ceci par la valeur réelle de votre base de données
-
-    // Calculer le nombre d'heures et de minutes
+    $durationFromDB = $movie; 
     $hours = floor($durationFromDB / 60);
     $minutes = fmod($durationFromDB, 60);
-
-    // Afficher le résultat
     $duration = $hours . "h" . $minutes . " minutes";
 
     return $duration;

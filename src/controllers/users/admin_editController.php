@@ -45,11 +45,6 @@ if (!empty($_POST)) {
             } else {
                 addUser();
             }
-
-            // Redirect to users list 
-            // header ('Location: ' . $router->generate('users'));
-            // die;
-
         } else {
             alert('Erreur lors de l\'ajout de l\'utilisateur.');
         }

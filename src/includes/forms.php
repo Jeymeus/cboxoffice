@@ -1,13 +1,13 @@
 <?php
 
 /**
+ * Check if a field is empty
  * 
- *Check if a field is empty
  * @param string $field
  * @param string $message
  * @return array
  */
-function checkEmptyFields($field, $message = 'Veuillez renseigner cette information.')
+function checkEmptyFields($field, $message = 'Please fill in this information.')
 {
     $result    = ['class' => '', 'message' => ''];
 
@@ -21,10 +21,19 @@ function checkEmptyFields($field, $message = 'Veuillez renseigner cette informat
     return $result;
 }
 
+/**
+ * Get the error message
+ */
 function getMessage()
 {
 }
 
+/**
+ * Get movie details by ID
+ * 
+ * @param int $movieId
+ * @return array
+ */
 function getMovieById($movieId)
 {
     global $db;
@@ -38,6 +47,11 @@ function getMovieById($movieId)
     return $movieDetails;
 }
 
+/**
+ * Get user details
+ * 
+ * @return array
+ */
 function getUser()
 {
     global $db;
@@ -52,11 +66,17 @@ function getUser()
             dump($e->getMessage());
             die;
         } else {
-            alert('Une erreur est survenue. Merci de réessayer plus tard', 'danger');
+            alert('An error occurred. Please try again later.', 'danger');
         }
     }
 }
 
+/**
+ * Get the value of a form field
+ * 
+ * @param string $field
+ * @return string
+ */
 function getValue(string $field): string
 {
     if (isset($_POST[$field])) {
@@ -64,12 +84,3 @@ function getValue(string $field): string
     }
     return '';
 }
-
-
-
-
-
-
-
-
-

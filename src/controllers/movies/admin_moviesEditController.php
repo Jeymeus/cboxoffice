@@ -3,7 +3,7 @@
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
-// Assurez-vous que le formulaire a été soumis et que le bouton "Ajouter Catégorie" a été cliqué
+// Check if the form has been submitted and the "Add Category" button has been clicked
 if (isset($_POST['new-category'])) {
     $_SESSION['movieName'] = $movieName;
     $_SESSION['notePress'] = $notePress;
@@ -12,9 +12,10 @@ if (isset($_POST['new-category'])) {
     $_SESSION['synopsis'] = $synopsis;
     $_SESSION['trailer'] = $trailer;
     header('Location: ' . $router->generate('categoryEdit'));
-    exit();
+    exit(); 
 }
 
+// Initialize variables 
 $errorsMessage = [
     'movie_name' => false,
     'date' => false,
@@ -42,15 +43,16 @@ $globalMessage = [
     'message' => false
 ];
 
-
 if (empty($_GET['id']) || empty($poster)) {
     $imgPoster = 'd-none';
 }
 
-
+// Check if the form has been submitted
 if (!empty($_POST)) {
+    // Determine if the operation is an update
     $isUpdate = isset($_GET['id']) && is_numeric($_GET['id']);
 
+    // Retrieve form data
     $movieName = getValue('movie_name');
     $notePress = getValue('note_press');
     $date = getValue('date');
@@ -58,13 +60,12 @@ if (!empty($_POST)) {
     $synopsis = getValue('synopsis');
     $trailer = getValue('trailer');
 
-
-    // Validation du titre du film
+    // Validate movie title
     if (empty($movieName)) {
         $errorsMessage['movie_name'] = '<span class="invalid-feedback">Le titre du film est obligatoire.</span>';
         $errorsClass['movie_name'] = 'is-invalid';
     } else {
-        // Si un ID est passé et que le titre existe déjà mais ne correspond pas à celui de l'ID
+        // If an ID is passed and the title already exists but does not match the ID
         if (!empty($_GET['id'])) {
             $existingTitle = checkAlreadyExistTitle($_GET['id']);
             if ($existingTitle == true) {
@@ -74,9 +75,7 @@ if (!empty($_POST)) {
         }
     }
 
-    $movieSlug = renameFile($movieName);
-
-    // Validation de la date du film
+    // Validate movie date
     if (empty($date)) {
         $errorsMessage['date'] = '<span class="invalid-feedback">La date du film est obligatoire.</span>';
         $errorsClass['date'] = 'is-invalid';
@@ -88,7 +87,7 @@ if (!empty($_POST)) {
         }
     }
 
-    // Validation de la durée du film
+    // Validate movie duration
     if (empty($duration)) {
         $errorsMessage['duration'] = '<span class="invalid-feedback">La durée du film est obligatoire.</span>';
         $errorsClass['duration'] = 'is-invalid';
@@ -100,13 +99,13 @@ if (!empty($_POST)) {
         }
     }
 
-    // Validation du synopsis du film
+    // Validate movie synopsis
     if (empty($synopsis)) {
         $errorsMessage['synopsis'] = '<span class="invalid-feedback">Le synopsis du film est obligatoire.</span>';
         $errorsClass['synopsis'] = 'is-invalid';
     }
 
-    // Validation de la note de presse
+    // Validate movie press note
     if (isset($notePress) && !empty($notePress)) {
         $regexDuration = '/^(?:10|\d(?:\.\d{1,2})?)$/';
         if (!preg_match($regexDuration, $notePress)) {
@@ -118,41 +117,32 @@ if (!empty($_POST)) {
         $errorsClass['note_press'] = 'is-invalid';
     }
 
-    // Call the updateCategory() function if the form has been submitted
+    // Validate categories
     if (empty($_POST['categories'])) {
         $errorsMessage['categories'] = '<div><p class="text-danger">Merci de sélectionner au moins une catégorie.</p></div>';
         $errorsClass['categories'] = 'bg-danger text-white';
-        
     }
 
     if (count(array_filter($errorsMessage)) == 0) {
-
-
-
+        // Process poster upload if not empty
         if (!empty($_FILES['poster']['name'])) {
-
-
+            // Initialize variable to poster
             $uploadPath = 'uploads';
-
             $uploadResult = uploadFile($uploadPath, 'poster');
-
             $manager = new ImageManager(new Driver());
 
             if (!empty($uploadResult['messagePoster'])) {
                 $errorsMessage['poster'] = '<span class="invalid-feedback">' . $uploadResult['messagePoster'] . '</span>';
                 $errorsClass['poster'] = 'is-invalid';
+            // check if function uploadFile is true
             } else if (!empty($uploadResult['path'])) {
-
                 $targetToSave = $uploadResult['path'];
                 $alreadyExistFiles = checkAlreadyExistFile($targetToSave);
-                // If the film exists and ID not,
+                // check if insert or upload movie 
                 if (in_array($targetToSave, $alreadyExistFiles) && !isset($_GET['id'])) {
                     $errorsMessage['poster'] = '<span class="invalid-feedback">Le nom de l\'affiche existe déjà.</span>';
                     $errorsClass['poster'] = 'is-invalid';
-                }
-                // If the film and ID exist, upload without poster
-                elseif (in_array($targetToSave, $alreadyExistFiles) && isset($_GET['id'])) {
-                    // Check if the film's ID matches his poster
+                } elseif (in_array($targetToSave, $alreadyExistFiles) && isset($_GET['id'])) {
                     $movie = getMovieById($_GET['id']);
                     if ($movie && $movie['poster'] === $targetToSave) {
                         if (count(array_filter($errorsMessage)) > 0) {
@@ -164,13 +154,10 @@ if (!empty($_POST)) {
                         header('Location: ' . $router->generate('library'));
                         exit();
                     } else {
-                        // If the ID doesn't match the poster, 
                         $errorsMessage['poster'] = '<span class="invalid-feedback">Une affiche du même nom existe.</span>';
                         $errorsClass['poster'] = 'is-invalid';
                     }
-                }
-                // If ID exists and the film does not exist, complete upload
-                elseif (isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
+                } elseif (isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
                     if (!move_uploaded_file($_FILES['poster']['tmp_name'], $targetToSave)) {
                         $errorsMessage['poster'] = '<span class="invalid-feedback">L\'affiche n\'a pas été téléchargé.</span>';
                         $errorsClass['poster'] = 'is-invalid';
@@ -183,9 +170,7 @@ if (!empty($_POST)) {
                     updateCategory($lastInsertedId);
                     header('Location: ' . $router->generate('library'));
                     exit();
-                }
-                // If ID and film do not exist, insertion
-                elseif (!isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
+                } elseif (!isset($_GET['id']) && !in_array($targetToSave, $alreadyExistFiles)) {
                     if (!move_uploaded_file($_FILES['poster']['tmp_name'], $targetToSave)) {
                         $errorsMessage['poster'] = '<span class="invalid-feedback">L\'affiche n\'a pas été téléchargé.</span>';
                         $errorsClass['poster'] = 'is-invalid';
@@ -211,3 +196,4 @@ if (!empty($_POST)) {
         $errorsClass['poster'] = 'is-invalid';
     }
 }
+?>

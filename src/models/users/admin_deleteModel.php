@@ -19,6 +19,11 @@ function deleteUser ()
     }
 }
 
+/**
+ * Retrieves the user ID if it already exists in the database.
+ *
+ * @return object|null Returns an object containing the ID of the user if it exists, or null otherwise.
+ */
 function getAlreadyExistId()
 {
     try {
@@ -38,6 +43,11 @@ function getAlreadyExistId()
     }
 }
 
+/**
+ * Counts the total number of users in the database.
+ *
+ * @return int Returns the total number of users.
+ */
 function countUsers() 
 {
     global $db;

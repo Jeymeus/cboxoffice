@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Retrieves movies created within the last week from the database.
+ *
+ *  * @return object 
+ */
 function getMovies()
 {
     global $db;

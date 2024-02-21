@@ -1,11 +1,14 @@
 <?php
-
-$categoryID = $_GET['id'];
-
+/**
+ * Deletes a category from the database based on the provided category ID.
+ *
+ * @param int $categoryId The ID of the category to be deleted.
+ * @return void
+ */
 function deleteCategory($categoryId)
 {
-    global $db;
-    global $router;
+    global $db; 
+    global $router; 
 
     try {
         $deleteCategory = "DELETE FROM category WHERE id = :id";
@@ -13,11 +16,12 @@ function deleteCategory($categoryId)
         $statement->bindParam(':id', $categoryId, PDO::PARAM_INT);
         $statement->execute();
 
-        alert('La catégorie a bien été supprimée', 'success');
-        header('Location: ' . $router->generate('categories')); // Rediriger vers la page des catégories après suppression
-        exit();
+        alert('The category has been successfully deleted.', 'success');
+        header('Location: ' . $router->generate('categories'));
+        exit(); 
     } catch (PDOException $e) {
-        alert('Erreur lors de la suppression de la catégorie : ' . $e->getMessage());
+        alert('Error deleting category: ' . $e->getMessage());
         header('Location: ' . $router->generate('categories'));
     }
 }
+?>

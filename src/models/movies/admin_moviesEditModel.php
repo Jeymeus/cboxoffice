@@ -1,9 +1,6 @@
 <?php
 
 
-
-
-
 use Intervention\Image\Drivers\Gd\Driver;
 use Symfony\Component\VarDumper\Server\DumpServer;
 
@@ -47,15 +44,12 @@ if (isset($_GET['id'])) {
     unset($_SESSION['duration']);
     unset($_SESSION['synopsis']);
     unset($_SESSION['trailer']);
-
-    // dump($_SESSION);
-
 }
 
 /**
  * Fetches the list of all movies from the database.
  * 
- * @return array An array containing details of all movies (titles, dates, durations, synopses, posters, trailers, press notes)
+ * @return object
  */
 function getMovies()
 {
@@ -122,6 +116,8 @@ function checkAlreadyExistFile(string $targetToSave): mixed
     $posterExist = $query->fetch(PDO::FETCH_ASSOC);
 
     return $posterExist ? $posterExist : [];
+    //$posterExist ? $posterExist : [], the first part, $posterExist
+    //If this condition evaluates to true, then the value of $posterExist is returned otherwise []
 }
 
 /**
@@ -187,9 +183,6 @@ function updateMovie(int $movieId, string $targetToSave)
 
         $query = $db->prepare($sql);
         $query->execute($data);
-
-        // header('Location: ' . $router->generate('library'));
-        // exit();
     } catch (PDOException $e) {
         echo 'Erreur de mise à jour : ' . $e->getMessage();
     }
@@ -363,7 +356,7 @@ $allCategory = getCategory();
 /**
  * Retrieve categories associated with a specific movie from the database.
  * 
- * @return array An array containing categories associated with the movie
+ * @return object
  */
 function getCategoryByMovie()
 {

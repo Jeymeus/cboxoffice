@@ -62,24 +62,34 @@ function checkAdmin(array $match, AltoRouter $router)
     }
 }
 
+/**
+ * Checks if the user's session has expired based on last login time
+ * If the session has expired, logs out the user and redirects to the login page
+ */
 function logoutTimer()
 {
     global $router;
 
+    // Check if last login time is set in the session
     if (!empty($_SESSION['user']['lastLogin'])) {
+        // Session expiration time in minutes
         $expireHour = 120;
 
+        // Get current time
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone('Europe/Paris'));
 
+        // Get last login time from session
         $lastLogin = new DateTime($_SESSION['user']['lastLogin']);
         $lastLogin->setTimezone(new DateTimeZone('Europe/Paris'));
 
+        // Calculate the difference in minutes between current time and last login time
         if ($now->diff($lastLogin)->i >= $expireHour) {
+            // If session has expired, unset the user session, display an alert, and redirect to login page
             unset($_SESSION['user']);
-            alert('vous avez été déconnecté', 'Danger');
+            alert('You have been logged out.', 'danger');
             header('Location: ' . $router->generate('login'));
-            die;
+            die; 
         }
     }
 }
