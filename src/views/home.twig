@@ -1,14 +1,16 @@
 {% extends 'layouts/public.twig' %} {% block title %}Accueil{% endblock %} {%
 block content %}
-<h1 class="wrapper">Les films de la semaine</h1>
-<div class="wrapper" id="movies">
-  {% for movie in movies %}
-  <article>
-    <a href="{{ getUrl('details', { slug: movie.slug }) }}">
-      <img src="{{ movie.poster }}" alt="{{ movie.title }}" />
-      <h2>{{ movie.title }}</h2>
-    </a>
-  </article>
+<section class="wrapper">
+  <h1>Les films de la semaine</h1>
+  <div id="movies">
+    {% for movie in movies %}
+    <article id="article;ed">
+      <a href="{{ getUrl('details', { slug: movie.slug }) }}">
+        <img src="{{ movie.poster }}" alt="{{ movie.title }}" />
+        <h2>{{ movie.title }}</h2>
+      </a>
+    </article>
   {% endfor %}
-</div>
+  </div>
+</section>
 {% endblock %}

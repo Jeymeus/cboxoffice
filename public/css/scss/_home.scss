@@ -25,3 +25,30 @@
     border-radius: 20px 20px 0 0;
   }
 }
+
+.allmovies {
+  text-align: center;
+}
+
+@media (max-width: 1380px) {
+  .wrapper {
+    width: 90%;
+  }
+}
+
+@media (max-width: 960px) {
+   #movies{
+      article {
+        width: 45%;
+      }
+  }
+}
+
+@media (max-width: 700px) {
+   #movies{
+      article {
+        width: 80%;
+      }
+  }
+}
+

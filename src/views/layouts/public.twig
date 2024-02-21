@@ -1,43 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <title>{% block title %}{% endblock %} | Movies</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/css/reset.css" />
-  <link rel="stylesheet" href="/css/main.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet" />
-  <link rel="shortcut icon" href="/images/favicon.png" />
-  <title>{% block title %}{% endblock %} | Movies</title>
-</head>
-
-<body>
-  <header>
-    <div class="wrapper containerbody">
-      <div class="header-top">
-        <a href="{{ getUrl('home')}}"><img src="/images/boxoffice.png" alt="" /></a>
-      </div>
-      <div class="container">
-        <form class="search" method="get" action="{{ getUrl('search')}}">
-          <input type="text" id="search" name="search" placeholder="Rechercher un film, une série, un acteur... " />
-          <button id="wen"><img src="/images/loupe.png" alt="" /></button>
-        </form>
-        <div class="connect">
-          <div class="center">
-            <img src="/images/user.png" alt="" />
-            <a href="{{ getUrl('login')}}">Connexion </a>
-            <a href="">Inscription </a>
+  <body>
+    <header>
+      <div class="wrapper containerbody">
+        <div class="header-top">
+          <a href="{{ getUrl('home') }}"
+            ><img src="/images/boxoffice.png" alt=""
+          /></a>
+        </div>
+        <div class="container">
+          <form class="search" method="get" action="{{ getUrl('search') }}">
+            <input
+              type="text"
+              id="search"
+              name="search"
+              placeholder="Rechercher un film... "
+            />
+            <button id="wen"><img src="/images/loupe.png" alt="" /></button>
+          </form>
+          <div class="connect">
+            <div class="center">
+              <img src="/images/user.png" alt="" />
+              <a href="{{ getUrl('login') }}">Connexion </a>
+            </div>
           </div>
         </div>
+        <div class="header-top" id="cinefan"><img src="/images/cinefan.png" alt="" /></div>
       </div>
-      <div class="header-top"><img src="/images/cinefan.png" alt="" /></div>
-    </div>
-  </header>
-  <main class="wrapper">
-    {% block content %}{% endblock %}
-  </main>
-</body>
-
+    </header>
+    <main class="wrapper">{% block content %}{% endblock %}</main>
+    <footer>
+      <div class="display">
+        <a href="#">Mentions légales</a>
+        <span>|</span>
+        <a href="#" class="media">Politiques de cookies</a>
+        <span class="media">|</span>
+        <a href="#" class="media">Qui sommes-nous</a>
+        <span class="media">|</span>
+        <a href="#">Contact</a>
+      </div>
+    </footer>
+  </body>
 </html>

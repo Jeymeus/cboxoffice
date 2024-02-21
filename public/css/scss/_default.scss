@@ -3,9 +3,10 @@
 }
 
 body {
-  background: transparent radial-gradient(closest-side at 50% 50%, #a81e1e 0%, #540f0f 100%) 0% 0% no-repeat padding-box;
+  background: transparent
+    radial-gradient(closest-side at 50% 50%, #a81e1e 0%, #540f0f 100%) 0% 0%
+    no-repeat padding-box;
   opacity: 1;
-  height: 5000px;
   font-family: "Lato", sans-serif;
   color: #fff;
   font-size: 16px;
@@ -36,3 +37,5 @@ a {
   color: #fff;
   text-decoration: none;
 }
+
+

@@ -24,7 +24,6 @@ if (!empty($_POST)) {
     $category3 = getValue('category3');
     $regexCategory = '/^[a-zA-Z\s\-]+$/';
 
-    // Vérifier si la catégorie 1 est valide et n'existe pas déjà
     if (!empty($category1)) {
         if (preg_match($regexCategory, $category1)) {
             if (!categoryExists($category1)) {

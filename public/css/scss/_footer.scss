@@ -1,0 +1,19 @@
+  footer {
+    background: transparent
+    radial-gradient(closest-side at 50% 50%, #000000 0%, #545454 100%) 0% 0%
+    no-repeat padding-box;
+    padding: 20px 0;
+
+    .display {
+        display: flex;
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 480px) {
+  footer {
+    .media {
+      display: none;
+    }
+  }
+}

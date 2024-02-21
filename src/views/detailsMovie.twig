@@ -1,41 +1,49 @@
-{% extends 'layouts/public.twig' %}
-{% block title %}Détails du film {{ movie.title }}{% endblock %}
-
-{% block content %}
+{% extends 'layouts/public.twig' %} {% block title %}Détails du film
+{{ movie.title }}{% endblock %} {% block content %}
 <section class="wrapper" id="details-movie">
-    <div class="displayStartVert">
-        <div id="titleDetail">
-            <h1>{{ movie.title }}</h1>
-        </div>
-        <div id="press">
-            <svg class="star" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
-                style="enable-background:new 0 0 47.1 46.9" viewBox="0 0 47.1 46.9">
-                <path
-                    d="M18.9 3.2c1-2.6 3.9-3.9 6.5-2.9 1.3.5 2.4 1.6 2.9 2.9l2.6 6.8c.7 1.8 2.4 3 4.3 3.2l7.4.6c2.8.2 4.8 2.6 4.6 5.4-.1 1.3-.7 2.5-1.6 3.3L39.3 28c-1.3 1.2-1.9 3.1-1.5 4.8l1.8 8c.6 2.7-1.1 5.4-3.8 6-1.3.3-2.7.1-3.9-.7l-5.7-3.8c-1.7-1.1-3.8-1.1-5.5 0L15 46.1c-2.3 1.5-5.4.9-6.9-1.4-.8-1.1-1-2.5-.7-3.9l1.8-8C9.6 31 9 29.2 7.7 28l-6.1-5.6c-2-1.9-2.2-5-.4-7.1.9-.9 2-1.5 3.3-1.6l7.4-.6c1.9-.2 3.6-1.4 4.3-3.2l2.7-6.7z"
-                    style="fill:#e5fe06" />
-            </svg>
-            <div class="press">
-                <p class="note-press">Note Presse</p>
-                <p>{{ movie.note_press }}</p>
-            </div>
-        </div>
+  <div class="displayStartVert">
+    <div id="titleDetail">
+      <h1>{{ movie.title }}</h1>
     </div>
-    <ul class="displayStart">
-        <li>{{ movie.date|date('Y') }}. {{ duration }}</li>
-    </ul>
-    <div class="displayStart">
-        <img src="{{ '/' ~ movie.poster }}" alt="{{ movie.title }}">
-        <iframe src="{{ movie.trailer}}" title="{{ movie.title }}"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen></iframe>
+    <div class="press">
+      <svg
+        class="star"
+        xmlns="http://www.w3.org/2000/svg"
+        xml:space="preserve"
+        style="enable-background: new 0 0 47.1 46.9"
+        viewBox="0 0 47.1 46.9"
+      >
+        <path
+          d="M18.9 3.2c1-2.6 3.9-3.9 6.5-2.9 1.3.5 2.4 1.6 2.9 2.9l2.6 6.8c.7 1.8 2.4 3 4.3 3.2l7.4.6c2.8.2 4.8 2.6 4.6 5.4-.1 1.3-.7 2.5-1.6 3.3L39.3 28c-1.3 1.2-1.9 3.1-1.5 4.8l1.8 8c.6 2.7-1.1 5.4-3.8 6-1.3.3-2.7.1-3.9-.7l-5.7-3.8c-1.7-1.1-3.8-1.1-5.5 0L15 46.1c-2.3 1.5-5.4.9-6.9-1.4-.8-1.1-1-2.5-.7-3.9l1.8-8C9.6 31 9 29.2 7.7 28l-6.1-5.6c-2-1.9-2.2-5-.4-7.1.9-.9 2-1.5 3.3-1.6l7.4-.6c1.9-.2 3.6-1.4 4.3-3.2l2.7-6.7z"
+          style="fill: #e5fe06"
+        />
+      </svg>
+      <div >
+        <p class="note-press">Note Presse</p>
+        <p>{{ movie.note_press }}</p>
+      </div>
     </div>
-    <div class="displayStart">
-        {% for category in categories %}
-        <div class="category">
-            <p>{{ category }}</p>
-        </div>
-        {% endfor %}
+  </div>
+  <ul class="displayStart">
+    <li>{{ movie.date|date('Y') }}. {{ duration }}</li>
+  </ul>
+  <div class="displayStart" id="media">
+    <img src="{{ '/' ~ movie.poster }}" alt="{{ movie.title }}" />
+    <iframe
+      src="{{ movie.trailer }}"
+      title="{{ movie.title }}"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div class="displayStart">
+    {% for category in categories %}
+    <div class="category">
+      <p>{{ category }}</p>
     </div>
-    <p>{{ movie.synopsis }}</p>
+    {% endfor %}
+  </div>
+  <p class="synopsis">Synopsis :</p>
+  <p id="synopsis">{{ movie.synopsis }}</p>
 </section>
 {% endblock %}

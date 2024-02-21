@@ -1,6 +1,7 @@
 section {
   h1 {
     font-size: 3rem;
+    line-height: 4rem;
     // margin-top: 38px;
   }
 
@@ -26,16 +27,19 @@ section {
   }
 
   .star {
+    display: inline;
     width: 50px;
   }
 
-
   .press {
-    position: absolute;
+    width: 55%;
+    display: flex;
+    justify-content: flex-end;
     text-align: center;
 
     p {
       margin-top: 5px;
+      margin-left: 20px;
       font-weight: bold;
     }
   }
@@ -68,5 +72,45 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .synopsis {
+    font-size: 35px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 20px;
+  }
+
+  #synopsis {
+    margin-bottom: 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  section {
+    img {
+      width: 60%;
+    }
+    iframe {
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  section {
+    img {
+      width: 80%;
+    } 
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    .press {
+      display: none;
+    }
   }
 }
